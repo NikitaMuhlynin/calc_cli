@@ -33,7 +33,7 @@ target_compile_options(calc_cli PRIVATE -Wall -Wextra -Wpedantic)
 install(TARGETS calc_cli RUNTIME DESTINATION bin)
 
 file(
-    GLOB_RECURCE PROJECT_SOURCES
+    GLOB_RECURSE PROJECT_SOURCES
     CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h"

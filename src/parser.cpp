@@ -95,7 +95,7 @@ namespace calc_cli {
                 break;
             
             default:
-                context->parse_status = 0
+                context->parse_status = 0;
                 return 0;
             }
         }
