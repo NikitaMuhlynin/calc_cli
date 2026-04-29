@@ -1,9 +1,18 @@
-#pragma once
+#include <nlohmann/json.hpp>
 
-#include "calc_cli/context.h"
+#include "context.h"
 
 namespace calc_cli {
 
-    int parse_arguments(int argc, char** argv, ApplicationContext* context);
+class CommandLineParser {
+public:
+    CommandLineParser() = delete;
+
+    static ParseResult parse(int argc, char** argv);
+
+private:
+    static CalculationRequest parseRequest(const nlohmann::json& data);
+    static Operation parseOperation(const std::string& value);
+};
 
 }

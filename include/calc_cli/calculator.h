@@ -4,6 +4,12 @@
 
 namespace calc_cli {
 
-    void calculate(ApplicationContext* context);
+class Calculator {
+public:
+    Calculator() = delete;
+
+    static long long calculate(const CalculationRequest& request);
+
+};
 
 }

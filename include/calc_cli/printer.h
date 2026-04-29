@@ -2,10 +2,18 @@
 
 #include "calc_cli/context.h"
 
+#include <string>
+
 namespace calc_cli {
 
-    void print_help(const char* program_name);
-    void print_result(const ApplicationContext* context);
-    void print_parse_error(const char* program_name);
+class Printer{
+public:
+    Printer() = delete;
+
+    static void print_help(const char* program_name);
+    static void print_result(long long result);
+    static void print_error(const std::string& message);
+};
 
 }
+
