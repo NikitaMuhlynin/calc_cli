@@ -65,6 +65,41 @@ target_compile_options(calc_cli PRIVATE -Wall -Wextra -Wpedantic)
 
 install(TARGETS calc_cli RUNTIME DESTINATION bin)
 
+# -------------------- tests --------------------
+
+enable_testing()
+
+file(
+    GLOB TEST_SOURCES
+    CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp"
+)
+
+add_executable(
+    calc_cli_tests
+    ${TEST_SOURCES}
+    src/runner.cpp
+    src/parser.cpp
+    src/calculator.cpp
+    src/printer.cpp
+)
+
+target_include_directories(calc_cli_tests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
+
+target_link_libraries(
+    calc_cli_tests
+    PRIVATE
+        safe_math::safe_math
+        nlohmann_json::nlohmann_json
+        spdlog::spdlog
+        gtest
+        gtest_main
+)
+
+target_compile_options(calc_cli_tests PRIVATE -Wall -Wextra -Wpedantic)
+
+add_test(NAME calc_cli_tests COMMAND calc_cli_tests)
+
 # -------------------- source collection --------------------
 
 file(
@@ -93,6 +128,7 @@ find_program(CLANG_TIDY_EXE clang-tidy)
 
 if(CLANG_TIDY_EXE)
     set_target_properties(calc_cli PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
+    set_target_properties(calc_cli_tests PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
 
     add_custom_target(
         tidy
