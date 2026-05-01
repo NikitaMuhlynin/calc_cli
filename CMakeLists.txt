@@ -49,6 +49,7 @@ add_executable(
     src/parser.cpp
     src/calculator.cpp
     src/printer.cpp
+    src/logger.cpp
 )
 
 target_include_directories(calc_cli PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
@@ -82,6 +83,7 @@ add_executable(
     src/parser.cpp
     src/calculator.cpp
     src/printer.cpp
+    src/logger.cpp
 )
 
 target_include_directories(calc_cli_tests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")

@@ -1,11 +1,13 @@
 #include "calc_cli/printer.h"
 
-#include <iostream>
-
 namespace calc_cli {
 
-void Printer::print_help(const char* programName) {
-    std::cout
+void Printer::printResult(std::ostream& out, long long result) const {
+    out << "Result: " << result << '\n';
+}
+
+void Printer::printHelp(std::ostream& out, const std::string& programName) const {
+    out
         << "Usage:\n"
         << "  " << programName << " '<json>'\n"
         << "  " << programName << " '{\"help\": true}'\n\n"
@@ -26,12 +28,10 @@ void Printer::print_help(const char* programName) {
         << "  " << programName << " '{\"help\": true}'\n";
 }
 
-void Printer::print_result(long long result) {
-    std::cout << "Result: " << result << '\n';
-}
-
-void Printer::print_error(const std::string& message) {
-    std::cerr << message << '\n';
+void Printer::printError(std::ostream& out, const std::string& message) const {
+    out << message << '\n';
 }
 
 }
+
+

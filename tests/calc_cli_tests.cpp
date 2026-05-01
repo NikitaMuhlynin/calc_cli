@@ -3,37 +3,24 @@
 #include <stdexcept>
 #include <functional>
 #include <string>
+#include <iosfwd>
 
 #include "../include/calc_cli/runner.h"
 
-std::string captureStdout(const std::function<void()>& func) {
-    std::ostringstream buffer;
-    std::streambuf* oldBuf = std::cout.rdbuf(buffer.rdbuf());
-    
-    try {
-        func();
-    } catch (...) {
-        std::cout.rdbuf(oldBuf);
-        throw;
-    }
-    
-    std::cout.rdbuf(oldBuf);
-    return buffer.str();
-}
+struct RunResult {
+    int code;
+    std::string out;
+    std::string err;
+};
 
-std::string captureStderr(const std::function<void()>& func) {
-    std::ostringstream buffer;
-    std::streambuf* oldBuf = std::cerr.rdbuf(buffer.rdbuf());
-    
-    try {
-        func();
-    } catch (...) {
-        std::cerr.rdbuf(oldBuf);
-        throw;
-    }
-    
-    std::cerr.rdbuf(oldBuf);
-    return buffer.str();
+RunResult runCli(int argc, char** argv) {
+    std::ostringstream out;
+    std::ostringstream err;
+
+    calc_cli::Runner runner(out, err);
+    int code = runner.run(argc, argv);
+
+    return RunResult{code, out.str(), err.str()};
 }
 
 // Regular calls
@@ -43,9 +30,7 @@ TEST(CalcCliTest, HelpRequested) {
     char helpArg[] = "{\"help\": true}";
     char* argv[] = { programName, helpArg };
 
-    std::string output = captureStdout([&]() {
-        calc_cli::Runner::run(2, argv);
-    });
+    RunResult output = runCli(2, argv);
 
     std::string expected =
         "Usage:\n"
@@ -67,7 +52,7 @@ TEST(CalcCliTest, HelpRequested) {
         "  calc_cli '{\"left\": 6, \"operation\": \"factorial\"}'\n"
         "  calc_cli '{\"help\": true}'\n";
 
-    EXPECT_EQ(output, expected);
+    EXPECT_EQ(output.out, expected);
 }
 
 TEST(CalcCliTest, NormalAdd) {
@@ -75,13 +60,11 @@ TEST(CalcCliTest, NormalAdd) {
     char AddArg[] = "{\"left\": 1, \"right\": 2, \"operation\": \"add\"}";
     char* argv[] = { programName, AddArg };
 
-    std::string output = captureStdout([&]() {
-        calc_cli::Runner::run(2, argv);
-    });
+    RunResult output = runCli(2, argv);
 
     std::string expected = "Result: 3\n";
 
-    EXPECT_EQ(output, expected);
+    EXPECT_EQ(output.out, expected);
 }
 
 TEST(CalcCliTest, NormalSub) {
@@ -89,13 +72,11 @@ TEST(CalcCliTest, NormalSub) {
     char SubArg[] = "{\"left\": 3, \"right\": 2, \"operation\": \"subtract\"}";
     char* argv[] = { programName, SubArg };
 
-    std::string output = captureStdout([&]() {
-        calc_cli::Runner::run(2, argv);
-    });
+    RunResult output = runCli(2, argv);
 
     std::string expected = "Result: 1\n";
 
-    EXPECT_EQ(output, expected);
+    EXPECT_EQ(output.out, expected);
 }
 
 TEST(CalcCliTest, NormalMul) {
@@ -103,13 +84,11 @@ TEST(CalcCliTest, NormalMul) {
     char MulArg[] = "{\"left\": 3, \"right\": 2, \"operation\": \"multiply\"}";
     char* argv[] = { programName, MulArg };
 
-    std::string output = captureStdout([&]() {
-        calc_cli::Runner::run(2, argv);
-    });
+    RunResult output = runCli(2, argv);
 
     std::string expected = "Result: 6\n";
 
-    EXPECT_EQ(output, expected);
+    EXPECT_EQ(output.out, expected);
 }
 
 TEST(CalcCliTest, NormalDiv) {
@@ -117,13 +96,11 @@ TEST(CalcCliTest, NormalDiv) {
     char DivArg[] = "{\"left\": 8, \"right\": 2, \"operation\": \"divide\"}";
     char* argv[] = { programName, DivArg };
 
-    std::string output = captureStdout([&]() {
-        calc_cli::Runner::run(2, argv);
-    });
+    RunResult output = runCli(2, argv);
 
     std::string expected = "Result: 4\n";
 
-    EXPECT_EQ(output, expected);
+    EXPECT_EQ(output.out, expected);
 }
 
 TEST(CalcCliTest, NormalPow) {
@@ -131,13 +108,11 @@ TEST(CalcCliTest, NormalPow) {
     char PowArg[] = "{\"left\": 8, \"right\": 2, \"operation\": \"power\"}";
     char* argv[] = { programName, PowArg };
 
-    std::string output = captureStdout([&]() {
-        calc_cli::Runner::run(2, argv);
-    });
+    RunResult output = runCli(2, argv);
 
     std::string expected = "Result: 64\n";
 
-    EXPECT_EQ(output, expected);
+    EXPECT_EQ(output.out, expected);
 }
 
 TEST(CalcCliTest, NormalFact) {
@@ -145,13 +120,11 @@ TEST(CalcCliTest, NormalFact) {
     char FactArg[] = "{\"left\": 6, \"operation\": \"factorial\"}";
     char* argv[] = { programName, FactArg };
 
-    std::string output = captureStdout([&]() {
-        calc_cli::Runner::run(2, argv);
-    });
+    RunResult output = runCli(2, argv);
 
     std::string expected = "Result: 720\n";
 
-    EXPECT_EQ(output, expected);
+    EXPECT_EQ(output.out, expected);
 }
 
 // Invalid calls
@@ -161,27 +134,20 @@ TEST(CalcCliTest, InvalidJSON) {
     char badJson[] = "{\"help\"}";
     char* argv[] = { programName, badJson };
 
-    int returnCode = 0;
-    std::string errorOutput = captureStderr([&]() {
-        returnCode = calc_cli::Runner::run(2, argv);
-    });
-
+    RunResult output = runCli(2, argv);
     
-    EXPECT_EQ(returnCode, 1);
-    EXPECT_NE(errorOutput.find("Error: invalid JSON input"), std::string::npos);
+    EXPECT_EQ(output.code, 1);
+    EXPECT_NE(output.err.find("Error: invalid JSON input"), std::string::npos);
 }
 
 TEST(CalcCliTest, EmptyCall) {
     char programName[] = "calc_cli";
     char* argv[] = { programName };
 
-    int returnCode = 0;
-    std::string errorOutput = captureStderr([&]() {
-        returnCode = calc_cli::Runner::run(1, argv);
-    });
+    RunResult output = runCli(1, argv);
     
-    EXPECT_EQ(returnCode, 1);
-    EXPECT_NE(errorOutput.find("Error: JSON input is missing"), std::string::npos);
+    EXPECT_EQ(output.code, 1);
+    EXPECT_NE(output.err.find("Error: JSON input is missing"), std::string::npos);
 }
 
 TEST(CalcCliTest, InvalidOperation) {
@@ -189,14 +155,10 @@ TEST(CalcCliTest, InvalidOperation) {
     char badJson[] = "{\"left\": 16, \"right\": 2, \"operation\": \"squareroot\"}";
     char* argv[] = { programName, badJson };
 
-    int returnCode = 0;
-    std::string errorOutput = captureStderr([&]() {
-        returnCode = calc_cli::Runner::run(2, argv);
-    });
-
+    RunResult output = runCli(2, argv);
     
-    EXPECT_EQ(returnCode, 1);
-    EXPECT_NE(errorOutput.find("Error: unknown operation"), std::string::npos);
+    EXPECT_EQ(output.code, 1);
+    EXPECT_NE(output.err.find("Error: unknown operation"), std::string::npos);
 }
 
 TEST(CalcCliTest, LeftIsMissing) {
@@ -204,14 +166,10 @@ TEST(CalcCliTest, LeftIsMissing) {
     char missedLeftJson[] = "{\"right\": 16, \"operation\": \"add\"}";
     char* argv[] = { programName, missedLeftJson };
 
-    int returnCode = 0;
-    std::string errorOutput = captureStderr([&]() {
-        returnCode = calc_cli::Runner::run(2, argv);
-    });
-
+    RunResult output = runCli(2, argv);
     
-    EXPECT_EQ(returnCode, 1);
-    EXPECT_NE(errorOutput.find("Error: field 'left' is required"), std::string::npos);
+    EXPECT_EQ(output.code, 1);
+    EXPECT_NE(output.err.find("Error: field 'left' is required"), std::string::npos);
 }
 
 TEST(CalcCliTest, RightIsMissing) {
@@ -219,14 +177,10 @@ TEST(CalcCliTest, RightIsMissing) {
     char missedRightJson[] = "{\"left\": 16, \"operation\": \"add\"}";
     char* argv[] = { programName, missedRightJson };
 
-    int returnCode = 0;
-    std::string errorOutput = captureStderr([&]() {
-        returnCode = calc_cli::Runner::run(2, argv);
-    });
+    RunResult output = runCli(2, argv);
 
-    
-    EXPECT_EQ(returnCode, 1);
-    EXPECT_NE(errorOutput.find("Error: field 'right' is required"), std::string::npos);
+    EXPECT_EQ(output.code, 1);
+    EXPECT_NE(output.err.find("Error: field 'right' is required"), std::string::npos);
 }
 
 TEST(CalcCliTest, OperationIsMissing) {
@@ -234,14 +188,10 @@ TEST(CalcCliTest, OperationIsMissing) {
     char missedOperationJson[] = "{\"left\": 16, \"right\": \"2\"}";
     char* argv[] = { programName, missedOperationJson };
 
-    int returnCode = 0;
-    std::string errorOutput = captureStderr([&]() {
-        returnCode = calc_cli::Runner::run(2, argv);
-    });
-
+    RunResult output = runCli(2, argv);
     
-    EXPECT_EQ(returnCode, 1);
-    EXPECT_NE(errorOutput.find("Error: field 'operation' is required"), std::string::npos);
+    EXPECT_EQ(output.code, 1);
+    EXPECT_NE(output.err.find("Error: field 'operation' is required"), std::string::npos);
 }
 
 TEST(CalcCliTest, DivisionByZero) {
@@ -249,14 +199,10 @@ TEST(CalcCliTest, DivisionByZero) {
     char divZeroJson[] = "{\"left\": 16, \"right\": 0, \"operation\": \"divide\"}";
     char* argv[] = { programName, divZeroJson };
 
-    int returnCode = 0;
-    std::string errorOutput = captureStderr([&]() {
-        returnCode = calc_cli::Runner::run(2, argv);
-    });
-
+    RunResult output = runCli(2, argv);
     
-    EXPECT_EQ(returnCode, 1);
-    EXPECT_NE(errorOutput.find("Error: division by zero"), std::string::npos);
+    EXPECT_EQ(output.code, 1);
+    EXPECT_NE(output.err.find("Error: division by zero"), std::string::npos);
 }
 
 TEST(CalcCliTest, Overflow) {
@@ -264,14 +210,10 @@ TEST(CalcCliTest, Overflow) {
     char overflowJson[] = "{\"left\": 21, \"operation\": \"factorial\"}";
     char* argv[] = { programName, overflowJson };
 
-    int returnCode = 0;
-    std::string errorOutput = captureStderr([&]() {
-        returnCode = calc_cli::Runner::run(2, argv);
-    });
-
+    RunResult output = runCli(2, argv);
     
-    EXPECT_EQ(returnCode, 1);
-    EXPECT_NE(errorOutput.find("Error: multiplication overflow"), std::string::npos);
+    EXPECT_EQ(output.code, 1);
+    EXPECT_NE(output.err.find("Error: multiplication overflow"), std::string::npos);
 }
 
 TEST(CalcCliTest, NegativePow) {
@@ -279,14 +221,10 @@ TEST(CalcCliTest, NegativePow) {
     char negativePowJson[] = "{\"left\": 2, \"right\": -2, \"operation\": \"power\"}";
     char* argv[] = { programName, negativePowJson };
 
-    int returnCode = 0;
-    std::string errorOutput = captureStderr([&]() {
-        returnCode = calc_cli::Runner::run(2, argv);
-    });
-
+    RunResult output = runCli(2, argv);
     
-    EXPECT_EQ(returnCode, 1);
-    EXPECT_NE(errorOutput.find("Error: negative exponent"), std::string::npos);
+    EXPECT_EQ(output.code, 1);
+    EXPECT_NE(output.err.find("Error: negative exponent"), std::string::npos);
 }
 
 TEST(CalcCliTest, NegativeFactorial) {
@@ -294,12 +232,8 @@ TEST(CalcCliTest, NegativeFactorial) {
     char negativeFactJson[] = "{\"left\": -5, \"operation\": \"factorial\"}";
     char* argv[] = { programName, negativeFactJson };
 
-    int returnCode = 0;
-    std::string errorOutput = captureStderr([&]() {
-        returnCode = calc_cli::Runner::run(2, argv);
-    });
-
+    RunResult output = runCli(2, argv);
     
-    EXPECT_EQ(returnCode, 1);
-    EXPECT_NE(errorOutput.find("Error: negative factorial argument"), std::string::npos);
+    EXPECT_EQ(output.code, 1);
+    EXPECT_NE(output.err.find("Error: negative factorial argument"), std::string::npos);
 }

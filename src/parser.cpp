@@ -4,10 +4,11 @@
 
 #include <stdexcept>
 #include <string>
+#include <unordered_map>
 
 namespace calc_cli {
 
-ParseResult CommandLineParser::parse(int argc, char** argv) {
+ApplicationContext CommandLineParser::parse(int argc, char** argv) {
     if (argc < 2) 
         throw std::invalid_argument("Error: JSON input is missing");
 
@@ -17,17 +18,18 @@ ParseResult CommandLineParser::parse(int argc, char** argv) {
         Logger::instance()->info("Received input: {}", argv[1]);
 
         if (data.contains("help") && data.at("help").get<bool>())
-            return calc_cli::ParseResult{true, std::nullopt};
-
-        return ParseResult(false, parseRequest(data));
-
+            return ApplicationContext{
+                0, 0, Operation::Add, 0, 1
+            };
+        
+        return parseRequest(data);
     } catch(const nlohmann::json::exception&) {
         Logger::instance()->warn("Invalid JSON input");
         throw std::invalid_argument("Error: invalid JSON input");
     }
 }
 
-CalculationRequest CommandLineParser::parseRequest(const nlohmann::json& data) {
+ApplicationContext CommandLineParser::parseRequest(const nlohmann::json& data) {
     if (!data.contains("left"))
         throw std::invalid_argument("Error: field 'left' is required");
     
@@ -36,7 +38,8 @@ CalculationRequest CommandLineParser::parseRequest(const nlohmann::json& data) {
         throw std::invalid_argument("Error: field 'operation' is required");
     }
     
-    CalculationRequest request;
+    ApplicationContext request;
+    request.help_requested = 0;
     request.left = data.at("left").get<long long>();
     request.operation = parseOperation(data.at("operation").get<std::string>());
 
@@ -51,26 +54,21 @@ CalculationRequest CommandLineParser::parseRequest(const nlohmann::json& data) {
 }
 
 Operation CommandLineParser::parseOperation(const std::string& value) {
-    if (value == "add") {
-        return Operation::Add;
-    }
-    if (value == "subtract") {
-        return Operation::Subtract;
-    }
-    if (value == "multiply") {
-        return Operation::Multiply;
-    }
-    if (value == "divide") {
-        return Operation::Divide;
-    }
-    if (value == "power") {
-        return Operation::Power;
-    }
-    if (value == "factorial") {
-        return Operation::Factorial;
+    static const std::unordered_map<std::string, Operation> operations = {
+        {"add", Operation::Add},
+        {"subtract", Operation::Subtract},
+        {"multiply", Operation::Multiply},
+        {"divide", Operation::Divide},
+        {"power", Operation::Power},
+        {"factorial", Operation::Factorial}
+    };
+
+    const auto it = operations.find(value);
+    if (it == operations.end()) {
+        throw std::invalid_argument("Error: unknown operation");
     }
 
-    throw std::invalid_argument("Error: unknown operation");
+    return it->second;
 }
 
 }

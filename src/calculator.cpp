@@ -6,25 +6,31 @@
 
 namespace calc_cli {
 
-long long Calculator::calculate(const CalculationRequest& request) {
+void Calculator::calculate(ApplicationContext& request) {
     
     if (request.operation == Operation::Add) {
-        return SafeMath::add(request.left, *request.right);
+        request.result = SafeMath::add(request.left, request.right);
+        return;
     }
     if (request.operation == Operation::Subtract) {
-        return SafeMath::subtract(request.left, *request.right);
+        request.result = SafeMath::subtract(request.left, request.right);
+        return;
     }
     if (request.operation == Operation::Multiply) {
-        return SafeMath::multiply(request.left, *request.right);
+        request.result = SafeMath::multiply(request.left, request.right);
+        return;
     }
     if (request.operation == Operation::Divide) {
-        return SafeMath::divide(request.left, *request.right);
+        request.result = SafeMath::divide(request.left, request.right);
+        return;
     }
     if (request.operation == Operation::Power) {
-        return SafeMath::power(request.left, *request.right);
+        request.result = SafeMath::power(request.left, request.right);
+        return;
     }
     if (request.operation == Operation::Factorial) {
-        return SafeMath::factorial(request.left);
+        request.result = SafeMath::factorial(request.left);
+        return;
     }
 
     throw std::logic_error("Error: unsupported operation");

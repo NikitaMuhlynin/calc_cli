@@ -6,9 +6,16 @@ namespace calc_cli {
 
 class Calculator {
 public:
-    Calculator() = delete;
+    Calculator() = default;
+    ~Calculator() = default;
+    
+    Calculator(const Calculator&) = default;
+    Calculator& operator=(const Calculator&) = default;
 
-    static long long calculate(const CalculationRequest& request);
+    Calculator(Calculator&&) = default;
+    Calculator& operator=(Calculator&&) = default;
+
+    void calculate(ApplicationContext& request);
 
 };
 

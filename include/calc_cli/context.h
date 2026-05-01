@@ -15,15 +15,12 @@ enum class Operation {
     Factorial
 };
 
-struct CalculationRequest {
-    long long left{};
-    std::optional<long long> right{};
-    Operation operation{};
-};
-
-struct ParseResult {
-    bool help_requested{false};
-    std::optional<CalculationRequest> request{};
+struct ApplicationContext {
+    long long left;
+    long long right;
+    Operation operation;
+    long long result;
+    int help_requested;
 };
 
 }

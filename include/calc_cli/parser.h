@@ -6,13 +6,20 @@ namespace calc_cli {
 
 class CommandLineParser {
 public:
-    CommandLineParser() = delete;
+    CommandLineParser() = default;
+    ~CommandLineParser() = default;
 
-    static ParseResult parse(int argc, char** argv);
+    CommandLineParser(const CommandLineParser&) = default;
+    CommandLineParser& operator=(const CommandLineParser&) = default;
+
+    CommandLineParser(CommandLineParser&&) = default;
+    CommandLineParser& operator=(CommandLineParser&&) = default;    
+
+    ApplicationContext parse(int argc, char** argv);
 
 private:
-    static CalculationRequest parseRequest(const nlohmann::json& data);
-    static Operation parseOperation(const std::string& value);
+    ApplicationContext parseRequest(const nlohmann::json& data);
+    Operation parseOperation(const std::string& value);
 };
 
 }

@@ -1,19 +1,22 @@
-#pragma once
-
-#include "calc_cli/context.h"
-
+#include <ostream>
 #include <string>
 
 namespace calc_cli {
 
-class Printer{
+class Printer {
 public:
-    Printer() = delete;
+    Printer() = default;
+    ~Printer() = default;
 
-    static void print_help(const char* program_name);
-    static void print_result(long long result);
-    static void print_error(const std::string& message);
+    Printer(const Printer&) = default;
+    Printer& operator=(const Printer&) = default;
+
+    Printer(Printer&&) = default;
+    Printer& operator=(Printer&&) = default;
+
+    void printResult(std::ostream& out, long long result) const;
+    void printHelp(std::ostream& out, const std::string& programName) const;
+    void printError(std::ostream& out, const std::string& message) const;
 };
 
 }
-

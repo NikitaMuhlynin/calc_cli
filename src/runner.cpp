@@ -1,37 +1,35 @@
 #include "calc_cli/runner.h"
 
-#include "calc_cli/calculator.h"
-#include "calc_cli/context.h"
-#include "calc_cli/parser.h"
-#include "calc_cli/printer.h"
-#include "calc_cli/logger.h"
-
+#include <iostream>
 
 namespace calc_cli {
+
+    Runner::Runner(std::ostream& out, std::ostream& err)
+        : parser_{}, calculator_{}, printer_{}, out_{out}, err_{err} {}
 
     int Runner::run(int argc, char** argv) {
         try {
             Logger::instance()->info("Program started");
 
-            ParseResult result = CommandLineParser::parse(argc, argv);
+            ApplicationContext result = parser_.parse(argc, argv);
 
             if (result.help_requested == false) {
-                long long calc_result = Calculator::calculate(*result.request);
+                calculator_.calculate(result);
 
-                Logger::instance()->info("Calculation completed: {}", calc_result);
+                Logger::instance()->info("Calculation completed: {}", result.result);
 
-                Printer::print_result(calc_result);
+                printer_.printResult(out_, result.result);
                 return 0;
             }
 
             Logger::instance()->info("Help requested");
             
-            Printer::print_help(argv[0]);
+            printer_.printHelp(out_, argv[0]);
             return 0;
         } catch(const std::exception& e) {
             Logger::instance()->error("Execution failed: {}", e.what());
 
-            Printer::print_error(e.what());
+            printer_.printError(err_, e.what());
             return 1;
         }
     }
