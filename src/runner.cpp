@@ -1,44 +1,37 @@
 #include "calc_cli/runner.h"
 
-#include "calc_cli/calculator.h"
-#include "calc_cli/context.h"
-#include "calc_cli/parser.h"
-#include "calc_cli/printer.h"
+#include <iostream>
 
 namespace calc_cli {
 
-    static void initialize_context(ApplicationContext* context) {
-        context->first_number = 0;
-        context->second_number = 0;
-        context->operation = OPERATION_NONE;
-        context->result = 0;
-        context->operation_status = safe_math::ERROR_OK;
-        context->help_requested = 0;
-        context->parse_status = 0;
-    }
+    Runner::Runner(std::ostream& out, std::ostream& err)
+        : parser_{}, calculator_{}, printer_{}, out_{out}, err_{err} {}
 
-    int run(int argc, char** argv) {
-        ApplicationContext context;
+    int Runner::run(int argc, char** argv) {
+        try {
+            Logger::instance()->info("Program started");
 
-        initialize_context(&context);
+            ApplicationContext result = parser_.parse(argc, argv);
 
-        if (!parse_arguments(argc, argv, &context)) {
-            print_parse_error(argv[0]);
-            return 2;
-        }
+            if (result.help_requested == false) {
+                calculator_.calculate(result);
 
-        if (context.help_requested) {
-            print_help(argv[0]);
+                Logger::instance()->info("Calculation completed: {}", result.result);
+
+                printer_.printResult(out_, result.result);
+                return 0;
+            }
+
+            Logger::instance()->info("Help requested");
+            
+            printer_.printHelp(out_, argv[0]);
             return 0;
-        }
+        } catch(const std::exception& e) {
+            Logger::instance()->error("Execution failed: {}", e.what());
 
-        calculate(&context);
-        print_result(&context);
-
-        if (context.operation_status != safe_math::ERROR_OK)
+            printer_.printError(err_, e.what());
             return 1;
-        
-        return 0;
+        }
     }
 
 }

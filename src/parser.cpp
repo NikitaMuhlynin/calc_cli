@@ -1,116 +1,74 @@
-#include "calc_cli/parser.h"
+#include "../include/calc_cli/parser.h"
+#include "../include/calc_cli/context.h"
+#include "../include/calc_cli/logger.h"
 
-#include <errno.h>
-#include <getopt.h>
-#include <stdlib.h>
-#include <string.h>
+#include <stdexcept>
+#include <string>
+#include <unordered_map>
 
 namespace calc_cli {
 
-    static int parse_long_long(const char* text, long long* value) {
-        char* end = 0;
-        long long parsed = 0;
+ApplicationContext CommandLineParser::parse(int argc, char** argv) {
+    if (argc < 2) 
+        throw std::invalid_argument("Error: JSON input is missing");
 
-        errno = 0;
-        parsed = strtoll(text, &end, 10);
+    try {
+        const auto data = nlohmann::json::parse(argv[1]);
 
-        if (errno == ERANGE || end == text || *end != '\0')
-            return 0;
+        Logger::instance()->info("Received input: {}", argv[1]);
+
+        if (data.contains("help") && data.at("help").get<bool>())
+            return ApplicationContext{
+                0, 0, Operation::Add, 0, 1
+            };
         
-        *value = parsed;
-        return 1;
+        return parseRequest(data);
+    } catch(const nlohmann::json::exception&) {
+        Logger::instance()->warn("Invalid JSON input");
+        throw std::invalid_argument("Error: invalid JSON input");
+    }
+}
+
+ApplicationContext CommandLineParser::parseRequest(const nlohmann::json& data) {
+    if (!data.contains("left"))
+        throw std::invalid_argument("Error: field 'left' is required");
+    
+    if (!data.contains("operation")) {
+        Logger::instance()->warn("Missing required field: operation"); 
+        throw std::invalid_argument("Error: field 'operation' is required");
+    }
+    
+    ApplicationContext request;
+    request.help_requested = 0;
+    request.left = data.at("left").get<long long>();
+    request.operation = parseOperation(data.at("operation").get<std::string>());
+
+    if (request.operation != Operation::Factorial) {
+        if (!data.contains("right"))
+            throw std::invalid_argument("Error: field 'right' is required");
+        
+        request.right = data.at("right").get<long long>();
+    }
+    
+    return request;
+}
+
+Operation CommandLineParser::parseOperation(const std::string& value) {
+    static const std::unordered_map<std::string, Operation> operations = {
+        {"add", Operation::Add},
+        {"subtract", Operation::Subtract},
+        {"multiply", Operation::Multiply},
+        {"divide", Operation::Divide},
+        {"power", Operation::Power},
+        {"factorial", Operation::Factorial}
+    };
+
+    const auto it = operations.find(value);
+    if (it == operations.end()) {
+        throw std::invalid_argument("Error: unknown operation");
     }
 
-    static Operation parse_operation(const char* text) {
-        if (strcmp(text, "add") == 0 || strcmp(text, "+") == 0)
-            return OPERATION_ADD;
-        
-        if (strcmp(text, "sub") == 0 || strcmp(text, "-") == 0)
-            return OPERATION_SUBTRACT;
-        
-        if (strcmp(text, "mul") == 0 || strcmp(text, "*") == 0)
-            return OPERATION_MULTIPLY;
-        
-        if (strcmp(text, "div") == 0 || strcmp(text, "/") == 0)
-            return OPERATION_DIVIDE;
-        
-        if (strcmp(text, "pow") == 0 || strcmp(text, "power") == 0)
-            return OPERATION_POWER;
-        
-        if (strcmp(text, "fact") == 0 || strcmp(text, "factorial") == 0)
-            return OPERATION_FACTORIAL;
-        
-        return OPERATION_NONE;
-    }
+    return it->second;
+}
 
-    int parse_arguments(int argc, char** argv, ApplicationContext* context) {
-        int option = 0;
-        int has_first_number = 0;
-        int has_second_number = 0;
-        int has_operation = 0;
-
-        static struct option long_options[] = {
-            {"help", no_argument, 0, 'h'},
-            {"first", required_argument, 0, 'a'},
-            {"second", required_argument, 0, 'b'},
-            {"operation", required_argument, 0, 'o'},
-            {0, 0, 0, 0}
-        };
-
-        while ((option = getopt_long(argc, argv, "ha:b:o:", long_options, 0)) != -1) {
-            switch (option)
-            {
-            case 'h':
-                context->help_requested = 1;
-                context->parse_status = 1;
-                return 1;
-            
-            case 'a':
-                if (!parse_long_long(optarg, &context->first_number)) {
-                    context->parse_status = 0;
-                    return 0;
-                }
-
-                has_first_number = 1;
-                break;
-            
-            case 'b':
-                if (!parse_long_long(optarg, &context->second_number)) {
-                    context->parse_status = 0;
-                    return 0;
-                }
-                
-                has_second_number = 1;
-                break;
-
-            case 'o':
-                context->operation = parse_operation(optarg);
-
-                if (context->operation == OPERATION_NONE) {
-                    context->parse_status = 0;
-                    return 0;
-                }
-
-                has_operation = 1;
-                break;
-            
-            default:
-                context->parse_status = 0;
-                return 0;
-            }
-        }
-
-        if (optind < argc) {
-            context->parse_status = 0;
-            return 0;
-        }
-
-        if (!has_first_number || !has_second_number || !has_operation) {
-            context->parse_status = 0;
-            return 0;
-        }
-        
-        context->parse_status = 1;
-        return 1;
-    }
 }
