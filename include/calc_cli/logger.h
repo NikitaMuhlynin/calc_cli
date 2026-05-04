@@ -1,23 +1,30 @@
 #pragma once
 
-#include <memory>
-#include <spdlog/logger.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
+#include <string_view>
 
 namespace calc_cli {
 
 class Logger {
 public:
-    Logger() = delete;
-    ~Logger() = default;
-
     Logger(const Logger&) = delete;
     Logger& operator=(const Logger&) = delete;
 
-    Logger(Logger&&) = delete;
-    Logger& operator=(Logger&&) = delete;
+    Logger(Logger&&) noexcept = delete;
+    Logger& operator=(Logger&&) noexcept = delete;
 
-    static std::shared_ptr<spdlog::logger>& instance();
+    static Logger& instance();
+
+    void trace(std::string_view message) const;
+    void debug(std::string_view message) const;
+    void info(std::string_view message) const;
+    void warn(std::string_view message) const;
+    void error(std::string_view message) const;
+    void critical(std::string_view message) const;
+
+private:
+    Logger() = default;
+    ~Logger() = default;
+
 };
 
 }

@@ -2,11 +2,11 @@
 
 #include <safe_math/safe_math.hpp>
 
-#include <optional>
+#include <cstdint>
 
 namespace calc_cli {
 
-enum class Operation {
+enum class Operation : std::uint8_t {
     Add,
     Subtract,
     Multiply,
@@ -16,12 +16,12 @@ enum class Operation {
 };
 
 struct ApplicationContext {
-    long long left;
-    long long right;
-    Operation operation;
-    long long result;
-    int help_requested;
-    int parse_status;
+    long long left = 0;
+    long long right = 0;
+    Operation operation = Operation::Add;
+    long long result = 0;
+    int help_requested = 0;
+    int parse_status = 0;
 };
 
 }

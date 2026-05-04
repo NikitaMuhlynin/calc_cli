@@ -11,8 +11,8 @@ public:
     Printer(const Printer&) = default;
     Printer& operator=(const Printer&) = default;
 
-    Printer(Printer&&) = default;
-    Printer& operator=(Printer&&) = default;
+    Printer(Printer&&) noexcept = default;
+    Printer& operator=(Printer&&) noexcept = default;
 
     void printResult(std::ostream& out, long long result) const;
     void printHelp(std::ostream& out, const std::string& programName) const;

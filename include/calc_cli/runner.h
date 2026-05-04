@@ -18,8 +18,8 @@ public:
     Runner(const Runner&) = default;
     Runner& operator=(const Runner&) = default;
     
-    Runner(Runner&&) = default;
-    Runner& operator=(const Runner&&) = default;
+    Runner(Runner&&) noexcept = default;
+    Runner& operator=(const Runner&&) noexcept = default;
 
     int run(int argc, char** argv);
 

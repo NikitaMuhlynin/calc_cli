@@ -12,8 +12,8 @@ public:
     Calculator(const Calculator&) = default;
     Calculator& operator=(const Calculator&) = default;
 
-    Calculator(Calculator&&) = default;
-    Calculator& operator=(Calculator&&) = default;
+    Calculator(Calculator&&) noexcept = default;
+    Calculator& operator=(Calculator&&) noexcept = default;
 
     void calculate(ApplicationContext& request);
 

@@ -12,8 +12,8 @@ public:
     CommandLineParser(const CommandLineParser&) = default;
     CommandLineParser& operator=(const CommandLineParser&) = default;
 
-    CommandLineParser(CommandLineParser&&) = default;
-    CommandLineParser& operator=(CommandLineParser&&) = default;    
+    CommandLineParser(CommandLineParser&&) noexcept = default;
+    CommandLineParser& operator=(CommandLineParser&&) noexcept = default;    
 
     ApplicationContext parse(int argc, char** argv);
 
