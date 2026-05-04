@@ -53,6 +53,7 @@ ApplicationContext CommandLineParser::parseRequest(const nlohmann::json& data) {
     const auto value = data.at("operation").get<std::string>();
     const auto it = operations.find(value);
     if (it == operations.end()) {
+        request.parse_status = 1;
         throw std::invalid_argument("Error: unknown operation");
     }
 
@@ -60,6 +61,7 @@ ApplicationContext CommandLineParser::parseRequest(const nlohmann::json& data) {
 
     if (request.operation != Operation::Factorial) {
         if (!data.contains("right"))
+            request.parse_status = 1;
             throw std::invalid_argument("Error: field 'right' is required");
         
         request.right = data.at("right").get<long long>();
