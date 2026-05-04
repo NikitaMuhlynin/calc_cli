@@ -21,6 +21,7 @@ struct ApplicationContext {
     Operation operation;
     long long result;
     int help_requested;
+    int parse_status;
 };
 
 }

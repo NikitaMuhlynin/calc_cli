@@ -19,7 +19,6 @@ public:
 
 private:
     ApplicationContext parseRequest(const nlohmann::json& data);
-    Operation parseOperation(const std::string& value);
 };
 
 }

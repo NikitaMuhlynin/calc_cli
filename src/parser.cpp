@@ -19,7 +19,7 @@ ApplicationContext CommandLineParser::parse(int argc, char** argv) {
 
         if (data.contains("help") && data.at("help").get<bool>())
             return ApplicationContext{
-                0, 0, Operation::Add, 0, 1
+                0, 0, Operation::Add, 0, 1, 0
             };
         
         return parseRequest(data);
@@ -41,19 +41,6 @@ ApplicationContext CommandLineParser::parseRequest(const nlohmann::json& data) {
     ApplicationContext request;
     request.help_requested = 0;
     request.left = data.at("left").get<long long>();
-    request.operation = parseOperation(data.at("operation").get<std::string>());
-
-    if (request.operation != Operation::Factorial) {
-        if (!data.contains("right"))
-            throw std::invalid_argument("Error: field 'right' is required");
-        
-        request.right = data.at("right").get<long long>();
-    }
-    
-    return request;
-}
-
-Operation CommandLineParser::parseOperation(const std::string& value) {
     static const std::unordered_map<std::string, Operation> operations = {
         {"add", Operation::Add},
         {"subtract", Operation::Subtract},
@@ -63,12 +50,23 @@ Operation CommandLineParser::parseOperation(const std::string& value) {
         {"factorial", Operation::Factorial}
     };
 
+    const auto value = data.at("operation").get<std::string>();
     const auto it = operations.find(value);
     if (it == operations.end()) {
         throw std::invalid_argument("Error: unknown operation");
     }
 
-    return it->second;
+    request.operation = it->second;
+
+    if (request.operation != Operation::Factorial) {
+        if (!data.contains("right"))
+            throw std::invalid_argument("Error: field 'right' is required");
+        
+        request.right = data.at("right").get<long long>();
+    }
+    
+    request.parse_status = 0;
+    return request;
 }
 
 }
