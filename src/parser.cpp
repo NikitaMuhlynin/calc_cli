@@ -15,7 +15,7 @@ ApplicationContext CommandLineParser::parse(int argc, char** argv) {
     try {
         const auto data = nlohmann::json::parse(argv[1]);
 
-        Logger::instance()->info("Received input: {}", argv[1]);
+        Logger::instance().info("Received input: {}", argv[1]);
 
         if (data.contains("help") && data.at("help").get<bool>())
             return ApplicationContext{
@@ -24,7 +24,7 @@ ApplicationContext CommandLineParser::parse(int argc, char** argv) {
         
         return parseRequest(data);
     } catch(const nlohmann::json::exception&) {
-        Logger::instance()->warn("Invalid JSON input");
+        Logger::instance().warn("Invalid JSON input");
         throw std::invalid_argument("Error: invalid JSON input");
     }
 }
@@ -34,7 +34,7 @@ ApplicationContext CommandLineParser::parseRequest(const nlohmann::json& data) {
         throw std::invalid_argument("Error: field 'left' is required");
     
     if (!data.contains("operation")) {
-        Logger::instance()->warn("Missing required field: operation"); 
+        Logger::instance().warn("Missing required field: operation"); 
         throw std::invalid_argument("Error: field 'operation' is required");
     }
     
@@ -60,9 +60,10 @@ ApplicationContext CommandLineParser::parseRequest(const nlohmann::json& data) {
     request.operation = it->second;
 
     if (request.operation != Operation::Factorial) {
-        if (!data.contains("right"))
+        if (!data.contains("right")) {
             request.parse_status = 1;
             throw std::invalid_argument("Error: field 'right' is required");
+        }
         
         request.right = data.at("right").get<long long>();
     }
