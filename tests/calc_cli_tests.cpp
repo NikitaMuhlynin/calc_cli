@@ -5,7 +5,7 @@
 #include <string>
 #include <iosfwd>
 
-#include "../include/calc_cli/runner.h"
+#include "calc_cli/application/runner.h"
 
 struct RunResult {
     int code;

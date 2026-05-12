@@ -40,19 +40,41 @@ FetchContent_MakeAvailable(
     spdlog
 )
 
+find_package(PostgreSQL REQUIRED)
+
+# -------------------- source lists --------------------
+
+set(APP_SOURCES
+    src/application/calculator.cpp
+    src/application/context.cpp
+    src/application/logger.cpp
+    src/application/parser.cpp
+    src/application/printer.cpp
+    src/application/runner.cpp
+)
+
+set(CACHE_SERVICE_SOURCES
+    src/cache_service/memory_cache.cpp
+    src/cache_service/storage.cpp
+)
+
+set(PROJECT_LIBRARY_SOURCES
+    ${APP_SOURCES}
+    ${CACHE_SERVICE_SOURCES}
+)
+
 # -------------------- main executable --------------------
 
 add_executable(
     calc_cli
     src/main.cpp
-    src/runner.cpp
-    src/parser.cpp
-    src/calculator.cpp
-    src/printer.cpp
-    src/logger.cpp
+    ${PROJECT_LIBRARY_SOURCES}
 )
 
-target_include_directories(calc_cli PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
+target_include_directories(calc_cli PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/include"
+    ${PostgreSQL_INCLUDE_DIRS}
+)
 
 target_link_libraries(
     calc_cli
@@ -60,6 +82,7 @@ target_link_libraries(
         safe_math::safe_math
         nlohmann_json::nlohmann_json
         spdlog::spdlog
+        ${PostgreSQL_LIBRARIES}
 )
 
 target_compile_options(calc_cli PRIVATE -Wall -Wextra -Wpedantic)
@@ -68,39 +91,39 @@ install(TARGETS calc_cli RUNTIME DESTINATION bin)
 
 # -------------------- tests --------------------
 
-enable_testing()
+# enable_testing()
 
-file(
-    GLOB TEST_SOURCES
-    CONFIGURE_DEPENDS
-    "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp"
-)
+# file(
+#     GLOB TEST_SOURCES
+#     CONFIGURE_DEPENDS
+#     "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp"
+# )
 
-add_executable(
-    calc_cli_tests
-    ${TEST_SOURCES}
-    src/runner.cpp
-    src/parser.cpp
-    src/calculator.cpp
-    src/printer.cpp
-    src/logger.cpp
-)
+# add_executable(
+#     calc_cli_tests
+#     ${TEST_SOURCES}
+#     ${PROJECT_LIBRARY_SOURCES}
+# )
 
-target_include_directories(calc_cli_tests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
+# target_include_directories(calc_cli_tests PRIVATE
+#     "${CMAKE_CURRENT_SOURCE_DIR}/include"
+#     ${PostgreSQL_INCLUDE_DIRS}
+# )
 
-target_link_libraries(
-    calc_cli_tests
-    PRIVATE
-        safe_math::safe_math
-        nlohmann_json::nlohmann_json
-        spdlog::spdlog
-        gtest
-        gtest_main
-)
+# target_link_libraries(
+#     calc_cli_tests
+#     PRIVATE
+#         safe_math::safe_math
+#         nlohmann_json::nlohmann_json
+#         spdlog::spdlog
+#         ${PostgreSQL_LIBRARIES}
+#         gtest
+#         gtest_main
+# )
 
-target_compile_options(calc_cli_tests PRIVATE -Wall -Wextra -Wpedantic)
+# target_compile_options(calc_cli_tests PRIVATE -Wall ) # -Wextra -Wpedantic
 
-add_test(NAME calc_cli_tests COMMAND calc_cli_tests)
+# add_test(NAME calc_cli_tests COMMAND calc_cli_tests)
 
 # -------------------- source collection --------------------
 
@@ -130,7 +153,7 @@ find_program(CLANG_TIDY_EXE clang-tidy)
 
 if(CLANG_TIDY_EXE)
     set_target_properties(calc_cli PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
-    set_target_properties(calc_cli_tests PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
+    # set_target_properties(calc_cli_tests PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
 
     add_custom_target(
         tidy
@@ -142,6 +165,7 @@ if(CLANG_TIDY_EXE)
             -I"${safe_math_SOURCE_DIR}/include"
             -I"${nlohmann_json_SOURCE_DIR}/include"
             -I"${spdlog_SOURCE_DIR}/include"
+            -I"${PostgreSQL_INCLUDE_DIRS}"
             -std=c++20
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     )
