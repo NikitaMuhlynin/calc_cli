@@ -1,5 +1,7 @@
 #include "calc_cli/cache_service/storage.h"
 
+#include <vector>
+
 namespace calc_cli {
 
 Storage::Storage(const std::string& connectionString)
@@ -116,20 +118,26 @@ void Storage::save(
     std::string resultValue = std::to_string(context.result);
     std::string statusCode = std::to_string(context.parse_status);
 
-    auto values = std::make_unique<const char*[]>(6);
+    const std::vector<std::string> params = {
+        key,
+        operationName,
+        leftOperand,
+        rightOperand,
+        resultValue,
+        statusCode
+    };
 
-    values[0] = key.c_str();
-    values[1] = operationName.c_str();
-    values[2] = leftOperand.c_str();
-    values[3] = rightOperand.c_str();
-    values[4] = resultValue.c_str();
-    values[5] = statusCode.c_str();
+    auto values = std::make_unique<const char*[]>(params.size());
+
+    for (std::size_t i = 0; i < params.size(); ++i) {
+        values[i] = params[i].c_str();
+    }
 
     PgResultPtr result = makeResult(
         PQexecParams(
             connection_.get(),
             sql.c_str(),
-            6,
+            static_cast<int>(params.size()),
             nullptr,
             values.get(),
             nullptr,
