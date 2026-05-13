@@ -2,45 +2,23 @@
 
 namespace calc_cli {
 
-Storage::Storage(const std::string& connectionString) {
-    connection_ = PQconnectdb(connectionString.c_str());
+Storage::Storage(const std::string& connectionString)
+    : connection_(nullptr, &PQfinish){
+    connection_.reset(PQconnectdb(connectionString.c_str()));
 
     if (connection_ == nullptr)
         throw std::runtime_error("Failed to allocate PostgreSQL");
 
-    if (PQstatus(connection_) != CONNECTION_OK) {
-        std::string errorMessage = PQerrorMessage(connection_);
+    if (PQstatus(connection_.get()) != CONNECTION_OK) {
+        std::string errorMessage = PQerrorMessage(connection_.get());
         
-        PQfinish(connection_);
+        PQfinish(connection_.get());
         connection_ = nullptr;
 
         throw std::runtime_error(
             "PostgreSQL connection failed: " + errorMessage 
         );
     }
-}
-
-Storage::~Storage() {
-    if (connection_ != nullptr)
-        PQfinish(connection_);
-}
-
-Storage::Storage(Storage&& other) noexcept
-    : connection_(other.connection_) {
-    other.connection_ = nullptr;
-}
-
-Storage& Storage::operator=(Storage&& other) noexcept {
-    if (this != &other) {
-        if (connection_ != nullptr) {
-            PQfinish(connection_);
-        }
-
-        connection_ = other.connection_;
-        other.connection_ = nullptr;
-    }
-
-    return *this;
 }
 
 Storage::PgResultPtr Storage::makeResult(
@@ -53,14 +31,14 @@ Storage::PgResultPtr Storage::makeResult(
 }
 
 void Storage::checkResultStatus(
-    PGresult* result,
+    const PgResultPtr& result,
     ExecStatusType expectedStatus,
     const std::string& errorPrefix
 ) const {
-    ExecStatusType actualStatus = PQresultStatus(result);
+    ExecStatusType actualStatus = PQresultStatus(result.get());
 
     if (actualStatus != expectedStatus) {
-        std::string errorMessage = PQresultErrorMessage(result);
+        std::string errorMessage = PQresultErrorMessage(result.get());
         
         throw std::runtime_error(errorPrefix + ": " + errorMessage);
     }
@@ -77,10 +55,10 @@ std::unordered_map<std::string, ApplicationContext> Storage::loadAll() {
         "status_code "
         "FROM calculation_results";
 
-    PgResultPtr result = makeResult(PQexec(connection_, sql));
+    PgResultPtr result = makeResult(PQexec(connection_.get(), sql));
 
     checkResultStatus(
-        result.get(),
+        result,
         PGRES_TUPLES_OK,
         "Failed to load calculation results"
     );
@@ -149,7 +127,7 @@ void Storage::save(
 
     PgResultPtr result = makeResult(
         PQexecParams(
-            connection_,
+            connection_.get(),
             sql,
             6,
             nullptr,
@@ -161,7 +139,7 @@ void Storage::save(
     );
 
     checkResultStatus(
-        result.get(),
+        result,
         PGRES_COMMAND_OK,
         "Failed to save calculation result"
     );
