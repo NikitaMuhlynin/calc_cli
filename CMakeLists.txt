@@ -121,9 +121,34 @@ target_link_libraries(
         gtest_main
 )
 
-target_compile_options(calc_cli_tests PRIVATE -Wall ) # -Wextra -Wpedantic
+target_compile_options(calc_cli_tests PRIVATE -Wall -Wextra -Wpedantic) 
 
 add_test(NAME calc_cli_tests COMMAND calc_cli_tests)
+
+# -------------------- valgrind tests --------------------
+
+find_program(VALGRIND_EXE valgrind)
+
+if(VALGRIND_EXE)
+    add_test(
+        NAME calc_cli_tests_valgrind
+        COMMAND
+            ${VALGRIND_EXE}
+            --leak-check=full
+            --show-leak-kinds=all
+            --track-origins=yes
+            --errors-for-leak-kinds=definite,indirect
+            --error-exitcode=1
+            $<TARGET_FILE:calc_cli_tests>
+    )
+
+    set_tests_properties(
+        calc_cli_tests_valgrind
+        PROPERTIES
+            LABELS "valgrind"
+            TIMEOUT 60
+    )
+endif()
 
 # -------------------- source collection --------------------
 

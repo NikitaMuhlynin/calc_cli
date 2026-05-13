@@ -9,7 +9,7 @@ MemoryCache::MemoryCache(
 
 void MemoryCache::load(
     std::unordered_map<std::string, ApplicationContext>& cache
-    ) {
+) {
     cache_ = std::move(cache);
 }
 

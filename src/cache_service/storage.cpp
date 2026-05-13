@@ -45,7 +45,7 @@ void Storage::checkResultStatus(
 }
 
 std::unordered_map<std::string, ApplicationContext> Storage::loadAll() {
-    const char* sql = 
+    const std::string sql = 
         "SELECT "
         "normalized_key, "
         "operation_name, "
@@ -55,7 +55,7 @@ std::unordered_map<std::string, ApplicationContext> Storage::loadAll() {
         "status_code "
         "FROM calculation_results";
 
-    PgResultPtr result = makeResult(PQexec(connection_.get(), sql));
+    PgResultPtr result = makeResult(PQexec(connection_.get(), sql.c_str()));
 
     checkResultStatus(
         result,
@@ -90,7 +90,7 @@ std::unordered_map<std::string, ApplicationContext> Storage::loadAll() {
 void Storage::save(
     const ApplicationContext& context
 ) {
-    const char* sql =
+    const std::string sql =
         "INSERT INTO calculation_results ("
         "normalized_key, "
         "operation_name, "
@@ -116,22 +116,22 @@ void Storage::save(
     std::string resultValue = std::to_string(context.result);
     std::string statusCode = std::to_string(context.parse_status);
 
-    const char* values[6] = {
-        key.c_str(),
-        operationName.c_str(),
-        leftOperand.c_str(),
-        rightOperand.c_str(),
-        resultValue.c_str(),
-        statusCode.c_str()
-    };
+    auto values = std::make_unique<const char*[]>(6);
+
+    values[0] = key.c_str();
+    values[1] = operationName.c_str();
+    values[2] = leftOperand.c_str();
+    values[3] = rightOperand.c_str();
+    values[4] = resultValue.c_str();
+    values[5] = statusCode.c_str();
 
     PgResultPtr result = makeResult(
         PQexecParams(
             connection_.get(),
-            sql,
+            sql.c_str(),
             6,
             nullptr,
-            values,
+            values.get(),
             nullptr,
             nullptr,
             0
