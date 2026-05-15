@@ -4,7 +4,7 @@
 namespace calc_cli {
 
 MemoryCache::MemoryCache(
-    const std::unordered_map<std::string, ApplicationContext>& records
+    std::unordered_map<std::string, ApplicationContext> records
     ) : cache_(std::move(records)) {}
 
 void MemoryCache::load(

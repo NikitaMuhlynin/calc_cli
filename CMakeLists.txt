@@ -46,7 +46,6 @@ find_package(PostgreSQL REQUIRED)
 
 set(APP_SOURCES
     src/application/calculator.cpp
-    src/application/context.cpp
     src/application/logger.cpp
     src/application/parser.cpp
     src/application/printer.cpp

@@ -14,7 +14,7 @@ public:
     MemoryCache() = default;
 
     explicit MemoryCache(
-        const std::unordered_map<std::string, ApplicationContext>& records
+        std::unordered_map<std::string, ApplicationContext> records
     );
 
     ~MemoryCache() = default;
@@ -22,8 +22,8 @@ public:
     MemoryCache(const MemoryCache& other) = delete;
     MemoryCache& operator=(const MemoryCache& other) = delete;
 
-    MemoryCache(MemoryCache&& other) = default;
-    MemoryCache& operator=(MemoryCache&& other) = default;
+    MemoryCache(MemoryCache&& other) noexcept = default;
+    MemoryCache& operator=(MemoryCache&& other) noexcept = default;
 
     void load(std::unordered_map<std::string, ApplicationContext>& cache);
     void save(const std::string& key, const ApplicationContext& context);
