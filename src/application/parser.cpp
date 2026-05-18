@@ -1,6 +1,6 @@
-#include "../include/calc_cli/parser.h"
-#include "../include/calc_cli/context.h"
-#include "../include/calc_cli/logger.h"
+#include "calc_cli/application/parser.h"
+#include "calc_cli/application/context.h"
+#include "calc_cli/application/logger.h"
 
 #include <stdexcept>
 #include <string>
@@ -41,24 +41,10 @@ ApplicationContext CommandLineParser::parseRequest(const nlohmann::json& data) {
     ApplicationContext request;
     request.help_requested = 0;
     request.left = data.at("left").get<long long>();
-    static const std::unordered_map<std::string, Operation> operations = {
-        {"add", Operation::Add},
-        {"subtract", Operation::Subtract},
-        {"multiply", Operation::Multiply},
-        {"divide", Operation::Divide},
-        {"power", Operation::Power},
-        {"factorial", Operation::Factorial}
-    };
 
     const auto value = data.at("operation").get<std::string>();
-    const auto it = operations.find(value);
-    if (it == operations.end()) {
-        request.parse_status = 1;
-        throw std::invalid_argument("Error: unknown operation");
-    }
-
-    request.operation = it->second;
-
+    request.operation = OperationTraits::fromString(value);
+   
     if (request.operation != Operation::Factorial) {
         if (!data.contains("right")) {
             request.parse_status = 1;

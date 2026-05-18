@@ -1,6 +1,8 @@
+#pragma once
+
 #include <nlohmann/json.hpp>
 
-#include "context.h"
+#include "calc_cli/application/context.h"
 
 namespace calc_cli {
 

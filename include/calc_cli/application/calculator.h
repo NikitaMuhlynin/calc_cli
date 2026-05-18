@@ -1,6 +1,6 @@
 #pragma once
 
-#include "calc_cli/context.h"
+#include "calc_cli/application/context.h"
 
 namespace calc_cli {
 

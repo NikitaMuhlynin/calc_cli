@@ -5,7 +5,7 @@
 #include <string>
 #include <iosfwd>
 
-#include "../include/calc_cli/runner.h"
+#include "calc_cli/application/runner.h"
 
 struct RunResult {
     int code;
@@ -16,8 +16,14 @@ struct RunResult {
 RunResult runCli(int argc, char** argv) {
     std::ostringstream out;
     std::ostringstream err;
+    const std::string connectionString =
+            "host=localhost "
+            "port=5432 "
+            "dbname=calcli_cache "
+            "user=calcli_user "
+            "password=calcli";
 
-    calc_cli::Runner runner(out, err);
+    calc_cli::Runner runner(out, err, connectionString);
     int code = runner.run(argc, argv);
 
     return RunResult{code, out.str(), err.str()};

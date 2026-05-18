@@ -40,19 +40,40 @@ FetchContent_MakeAvailable(
     spdlog
 )
 
+find_package(PostgreSQL REQUIRED)
+
+# -------------------- source lists --------------------
+
+set(APP_SOURCES
+    src/application/calculator.cpp
+    src/application/logger.cpp
+    src/application/parser.cpp
+    src/application/printer.cpp
+    src/application/runner.cpp
+)
+
+set(CACHE_SERVICE_SOURCES
+    src/cache_service/memory_cache.cpp
+    src/cache_service/storage.cpp
+)
+
+set(PROJECT_LIBRARY_SOURCES
+    ${APP_SOURCES}
+    ${CACHE_SERVICE_SOURCES}
+)
+
 # -------------------- main executable --------------------
 
 add_executable(
     calc_cli
     src/main.cpp
-    src/runner.cpp
-    src/parser.cpp
-    src/calculator.cpp
-    src/printer.cpp
-    src/logger.cpp
+    ${PROJECT_LIBRARY_SOURCES}
 )
 
-target_include_directories(calc_cli PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
+target_include_directories(calc_cli PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/include"
+    ${PostgreSQL_INCLUDE_DIRS}
+)
 
 target_link_libraries(
     calc_cli
@@ -60,6 +81,7 @@ target_link_libraries(
         safe_math::safe_math
         nlohmann_json::nlohmann_json
         spdlog::spdlog
+        ${PostgreSQL_LIBRARIES}
 )
 
 target_compile_options(calc_cli PRIVATE -Wall -Wextra -Wpedantic)
@@ -79,14 +101,13 @@ file(
 add_executable(
     calc_cli_tests
     ${TEST_SOURCES}
-    src/runner.cpp
-    src/parser.cpp
-    src/calculator.cpp
-    src/printer.cpp
-    src/logger.cpp
+    ${PROJECT_LIBRARY_SOURCES}
 )
 
-target_include_directories(calc_cli_tests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
+target_include_directories(calc_cli_tests PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/include"
+    ${PostgreSQL_INCLUDE_DIRS}
+)
 
 target_link_libraries(
     calc_cli_tests
@@ -94,13 +115,39 @@ target_link_libraries(
         safe_math::safe_math
         nlohmann_json::nlohmann_json
         spdlog::spdlog
+        ${PostgreSQL_LIBRARIES}
         gtest
         gtest_main
 )
 
-target_compile_options(calc_cli_tests PRIVATE -Wall -Wextra -Wpedantic)
+target_compile_options(calc_cli_tests PRIVATE -Wall -Wextra -Wpedantic) 
 
 add_test(NAME calc_cli_tests COMMAND calc_cli_tests)
+
+# -------------------- valgrind tests --------------------
+
+find_program(VALGRIND_EXE valgrind)
+
+if(VALGRIND_EXE)
+    add_test(
+        NAME calc_cli_tests_valgrind
+        COMMAND
+            ${VALGRIND_EXE}
+            --leak-check=full
+            --show-leak-kinds=all
+            --track-origins=yes
+            --errors-for-leak-kinds=definite,indirect
+            --error-exitcode=1
+            $<TARGET_FILE:calc_cli_tests>
+    )
+
+    set_tests_properties(
+        calc_cli_tests_valgrind
+        PROPERTIES
+            LABELS "valgrind"
+            TIMEOUT 60
+    )
+endif()
 
 # -------------------- source collection --------------------
 
@@ -142,6 +189,7 @@ if(CLANG_TIDY_EXE)
             -I"${safe_math_SOURCE_DIR}/include"
             -I"${nlohmann_json_SOURCE_DIR}/include"
             -I"${spdlog_SOURCE_DIR}/include"
+            -I"${PostgreSQL_INCLUDE_DIRS}"
             -std=c++20
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     )
