@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <nlohmann/json.hpp>
 
 #include "calc_cli/application/context.h"
@@ -17,7 +18,7 @@ public:
     CommandLineParser(CommandLineParser&&) noexcept = default;
     CommandLineParser& operator=(CommandLineParser&&) noexcept = default;    
 
-    ApplicationContext parse(int argc, char** argv);
+    ApplicationContext parse(const std::string& request);
 
 private:
     ApplicationContext parseRequest(const nlohmann::json& data);

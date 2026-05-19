@@ -8,14 +8,11 @@
 
 namespace calc_cli {
 
-ApplicationContext CommandLineParser::parse(int argc, char** argv) {
-    if (argc < 2) 
-        throw std::invalid_argument("Error: JSON input is missing");
-
+ApplicationContext CommandLineParser::parse(const std::string& request) {
     try {
-        const auto data = nlohmann::json::parse(argv[1]);
+        const auto data = nlohmann::json::parse(request);
 
-        Logger::instance().info("Received input: {}", argv[1]);
+        Logger::instance().info("Received input: {}", request);
 
         if (data.contains("help") && data.at("help").get<bool>())
             return ApplicationContext{

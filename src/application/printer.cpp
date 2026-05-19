@@ -6,11 +6,11 @@ void Printer::printResult(std::ostream& out, long long result) const {
     out << "Result: " << result << '\n';
 }
 
-void Printer::printHelp(std::ostream& out, const std::string& programName) const {
+void Printer::printHelp(std::ostream& out) const {
     out
         << "Usage:\n"
-        << "  " << programName << " '<json>'\n"
-        << "  " << programName << " '{\"help\": true}'\n\n"
+        << "  " <<  " '<json>'\n"
+        << "  " <<  " '{\"help\": true}'\n\n"
         << "Description:\n"
         << "  calc_cli performs safe integer arithmetic using JSON input.\n\n"
         << "Supported operations:\n"
@@ -23,9 +23,9 @@ void Printer::printHelp(std::ostream& out, const std::string& programName) const
         << "  Help:\n"
         << "    {\"help\": true}\n\n"
         << "Examples:\n"
-        << "  " << programName << " '{\"left\": 10, \"right\": 20, \"operation\": \"add\"}'\n"
-        << "  " << programName << " '{\"left\": 6, \"operation\": \"factorial\"}'\n"
-        << "  " << programName << " '{\"help\": true}'\n";
+        << "  " <<  " '{\"left\": 10, \"right\": 20, \"operation\": \"add\"}'\n"
+        << "  " <<  " '{\"left\": 6, \"operation\": \"factorial\"}'\n"
+        << "  " <<  " '{\"help\": true}'\n";
 }
 
 void Printer::printError(std::ostream& out, const std::string& message) const {

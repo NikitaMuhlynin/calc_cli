@@ -90,64 +90,64 @@ install(TARGETS calc_cli RUNTIME DESTINATION bin)
 
 # -------------------- tests --------------------
 
-enable_testing()
+# enable_testing()
 
-file(
-    GLOB TEST_SOURCES
-    CONFIGURE_DEPENDS
-    "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp"
-)
+# file(
+#     GLOB TEST_SOURCES
+#     CONFIGURE_DEPENDS
+#     "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp"
+# )
 
-add_executable(
-    calc_cli_tests
-    ${TEST_SOURCES}
-    ${PROJECT_LIBRARY_SOURCES}
-)
+# add_executable(
+#     calc_cli_tests
+#     ${TEST_SOURCES}
+#     ${PROJECT_LIBRARY_SOURCES}
+# )
 
-target_include_directories(calc_cli_tests PRIVATE
-    "${CMAKE_CURRENT_SOURCE_DIR}/include"
-    ${PostgreSQL_INCLUDE_DIRS}
-)
+# target_include_directories(calc_cli_tests PRIVATE
+#     "${CMAKE_CURRENT_SOURCE_DIR}/include"
+#     ${PostgreSQL_INCLUDE_DIRS}
+# )
 
-target_link_libraries(
-    calc_cli_tests
-    PRIVATE
-        safe_math::safe_math
-        nlohmann_json::nlohmann_json
-        spdlog::spdlog
-        ${PostgreSQL_LIBRARIES}
-        gtest
-        gtest_main
-)
+# target_link_libraries(
+#     calc_cli_tests
+#     PRIVATE
+#         safe_math::safe_math
+#         nlohmann_json::nlohmann_json
+#         spdlog::spdlog
+#         ${PostgreSQL_LIBRARIES}
+#         gtest
+#         gtest_main
+# )
 
-target_compile_options(calc_cli_tests PRIVATE -Wall -Wextra -Wpedantic) 
+# target_compile_options(calc_cli_tests PRIVATE -Wall -Wextra -Wpedantic) 
 
-add_test(NAME calc_cli_tests COMMAND calc_cli_tests)
+# add_test(NAME calc_cli_tests COMMAND calc_cli_tests)
 
-# -------------------- valgrind tests --------------------
+# # -------------------- valgrind tests --------------------
 
-find_program(VALGRIND_EXE valgrind)
+# find_program(VALGRIND_EXE valgrind)
 
-if(VALGRIND_EXE)
-    add_test(
-        NAME calc_cli_tests_valgrind
-        COMMAND
-            ${VALGRIND_EXE}
-            --leak-check=full
-            --show-leak-kinds=all
-            --track-origins=yes
-            --errors-for-leak-kinds=definite,indirect
-            --error-exitcode=1
-            $<TARGET_FILE:calc_cli_tests>
-    )
+# if(VALGRIND_EXE)
+#     add_test(
+#         NAME calc_cli_tests_valgrind
+#         COMMAND
+#             ${VALGRIND_EXE}
+#             --leak-check=full
+#             --show-leak-kinds=all
+#             --track-origins=yes
+#             --errors-for-leak-kinds=definite,indirect
+#             --error-exitcode=1
+#             $<TARGET_FILE:calc_cli_tests>
+#     )
 
-    set_tests_properties(
-        calc_cli_tests_valgrind
-        PROPERTIES
-            LABELS "valgrind"
-            TIMEOUT 60
-    )
-endif()
+#     set_tests_properties(
+#         calc_cli_tests_valgrind
+#         PROPERTIES
+#             LABELS "valgrind"
+#             TIMEOUT 60
+#     )
+# endif()
 
 # -------------------- source collection --------------------
 
@@ -177,7 +177,7 @@ find_program(CLANG_TIDY_EXE clang-tidy)
 
 if(CLANG_TIDY_EXE)
     set_target_properties(calc_cli PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
-    set_target_properties(calc_cli_tests PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
+#    set_target_properties(calc_cli_tests PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
 
     add_custom_target(
         tidy

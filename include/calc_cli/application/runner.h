@@ -1,6 +1,8 @@
 #pragma once
 
 #include <ostream>
+#include <atomic>
+#include <thread>
 
 #include "calc_cli/application/calculator.h"
 #include "calc_cli/application/parser.h"
@@ -15,17 +17,25 @@ namespace calc_cli {
 class Runner {
 public:
     Runner(std::ostream& out, std::ostream& err, const std::string& connectionString);
-    ~Runner() = default;
+    ~Runner();
 
-    Runner(const Runner&) = default;
-    Runner& operator=(const Runner&) = default;
+    Runner(const Runner&) = delete;
+    Runner& operator=(const Runner&) = delete;
     
-    Runner(Runner&&) noexcept = default;
-    Runner& operator=(const Runner&&) noexcept = default;
+    Runner(Runner&&) noexcept = delete;
+    Runner& operator=(const Runner&&) noexcept = delete;
 
-    int run(int argc, char** argv);
+    void run();
 
 private:
+    void signal_thread();
+    void user_thread();
+
+private:
+    std::thread user_thread_;
+    std::thread signal_thread_;
+    std::atomic<bool> running_;
+
     CommandLineParser parser_;
     Calculator calculator_;
     Printer printer_;

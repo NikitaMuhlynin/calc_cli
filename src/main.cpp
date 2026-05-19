@@ -15,7 +15,8 @@ int main(int argc, char** argv) {
             std::cout,
             std::cerr,
             connectionString);
-        return runner.run(argc, argv);
+        runner.run();
+        return 0;
 
     } catch(const std::exception& e) {
         std::cerr << e.what() << '\n';
