@@ -1,4 +1,5 @@
 .vscode
 build
+build-tsan
 perf.data
 perf.data.old

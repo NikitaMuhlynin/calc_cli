@@ -16,9 +16,9 @@ public:
     Printer(Printer&&) noexcept = default;
     Printer& operator=(Printer&&) noexcept = default;
 
-    void printResult(std::ostream& out, long long result) const;
-    void printHelp(std::ostream& out) const;
-    void printError(std::ostream& out, const std::string& message) const;
+    std::string printResult(long long result) const;
+    std::string printHelp() const;
+    std::string printError(const std::string& message) const;
 };
 
 }
