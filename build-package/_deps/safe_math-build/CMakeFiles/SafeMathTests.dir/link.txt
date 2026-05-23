@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG -Wl,--dependency-file=CMakeFiles/SafeMathTests.dir/link.d CMakeFiles/SafeMathTests.dir/tests/SafeMath_tests.cpp.o -o SafeMathTests  ../../lib/libgtest.a ../../lib/libgtest_main.a ../../lib/libgtest.a

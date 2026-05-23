@@ -1,0 +1,14 @@
+# Target labels
+ safe_math-populate
+# Source files and their labels
+/home/nikita/repos/calc_cli/build-package/_deps/safe_math-subbuild/CMakeFiles/safe_math-populate
+/home/nikita/repos/calc_cli/build-package/_deps/safe_math-subbuild/CMakeFiles/safe_math-populate.rule
+/home/nikita/repos/calc_cli/build-package/_deps/safe_math-subbuild/CMakeFiles/safe_math-populate-complete.rule
+/home/nikita/repos/calc_cli/build-package/_deps/safe_math-subbuild/safe_math-populate-prefix/src/safe_math-populate-stamp/safe_math-populate-build.rule
+/home/nikita/repos/calc_cli/build-package/_deps/safe_math-subbuild/safe_math-populate-prefix/src/safe_math-populate-stamp/safe_math-populate-configure.rule
+/home/nikita/repos/calc_cli/build-package/_deps/safe_math-subbuild/safe_math-populate-prefix/src/safe_math-populate-stamp/safe_math-populate-download.rule
+/home/nikita/repos/calc_cli/build-package/_deps/safe_math-subbuild/safe_math-populate-prefix/src/safe_math-populate-stamp/safe_math-populate-install.rule
+/home/nikita/repos/calc_cli/build-package/_deps/safe_math-subbuild/safe_math-populate-prefix/src/safe_math-populate-stamp/safe_math-populate-mkdir.rule
+/home/nikita/repos/calc_cli/build-package/_deps/safe_math-subbuild/safe_math-populate-prefix/src/safe_math-populate-stamp/safe_math-populate-patch.rule
+/home/nikita/repos/calc_cli/build-package/_deps/safe_math-subbuild/safe_math-populate-prefix/src/safe_math-populate-stamp/safe_math-populate-test.rule
+/home/nikita/repos/calc_cli/build-package/_deps/safe_math-subbuild/safe_math-populate-prefix/src/safe_math-populate-stamp/safe_math-populate-update.rule

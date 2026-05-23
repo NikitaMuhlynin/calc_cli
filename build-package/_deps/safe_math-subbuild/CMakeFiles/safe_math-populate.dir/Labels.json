@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/nikita/repos/calc_cli/build-package/_deps/safe_math-subbuild/CMakeFiles/safe_math-populate"
+		},
+		{
+			"file" : "/home/nikita/repos/calc_cli/build-package/_deps/safe_math-subbuild/CMakeFiles/safe_math-populate.rule"
+		},
+		{
+			"file" : "/home/nikita/repos/calc_cli/build-package/_deps/safe_math-subbuild/CMakeFiles/safe_math-populate-complete.rule"
+		},
+		{
+			"file" : "/home/nikita/repos/calc_cli/build-package/_deps/safe_math-subbuild/safe_math-populate-prefix/src/safe_math-populate-stamp/safe_math-populate-build.rule"
+		},
+		{
+			"file" : "/home/nikita/repos/calc_cli/build-package/_deps/safe_math-subbuild/safe_math-populate-prefix/src/safe_math-populate-stamp/safe_math-populate-configure.rule"
+		},
+		{
+			"file" : "/home/nikita/repos/calc_cli/build-package/_deps/safe_math-subbuild/safe_math-populate-prefix/src/safe_math-populate-stamp/safe_math-populate-download.rule"
+		},
+		{
+			"file" : "/home/nikita/repos/calc_cli/build-package/_deps/safe_math-subbuild/safe_math-populate-prefix/src/safe_math-populate-stamp/safe_math-populate-install.rule"
+		},
+		{
+			"file" : "/home/nikita/repos/calc_cli/build-package/_deps/safe_math-subbuild/safe_math-populate-prefix/src/safe_math-populate-stamp/safe_math-populate-mkdir.rule"
+		},
+		{
+			"file" : "/home/nikita/repos/calc_cli/build-package/_deps/safe_math-subbuild/safe_math-populate-prefix/src/safe_math-populate-stamp/safe_math-populate-patch.rule"
+		},
+		{
+			"file" : "/home/nikita/repos/calc_cli/build-package/_deps/safe_math-subbuild/safe_math-populate-prefix/src/safe_math-populate-stamp/safe_math-populate-test.rule"
+		},
+		{
+			"file" : "/home/nikita/repos/calc_cli/build-package/_deps/safe_math-subbuild/safe_math-populate-prefix/src/safe_math-populate-stamp/safe_math-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"safe_math-populate"
+		],
+		"name" : "safe_math-populate"
+	}
+}

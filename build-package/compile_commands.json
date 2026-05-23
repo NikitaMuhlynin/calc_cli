@@ -1,0 +1,182 @@
+[
+{
+  "directory": "/home/nikita/repos/calc_cli/build-package",
+  "command": "/usr/bin/c++ -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DSPDLOG_COMPILED_LIB -I/home/nikita/repos/calc_cli/include -I/usr/include/postgresql -I/home/nikita/repos/calc_cli/build-package/_deps/safe_math-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/nlohmann_json-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/include -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -o CMakeFiles/calc_cli.dir/src/main.cpp.o -c /home/nikita/repos/calc_cli/src/main.cpp",
+  "file": "/home/nikita/repos/calc_cli/src/main.cpp",
+  "output": "CMakeFiles/calc_cli.dir/src/main.cpp.o"
+},
+{
+  "directory": "/home/nikita/repos/calc_cli/build-package",
+  "command": "/usr/bin/c++ -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DSPDLOG_COMPILED_LIB -I/home/nikita/repos/calc_cli/include -I/usr/include/postgresql -I/home/nikita/repos/calc_cli/build-package/_deps/safe_math-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/nlohmann_json-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/include -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -o CMakeFiles/calc_cli.dir/src/application/calculator.cpp.o -c /home/nikita/repos/calc_cli/src/application/calculator.cpp",
+  "file": "/home/nikita/repos/calc_cli/src/application/calculator.cpp",
+  "output": "CMakeFiles/calc_cli.dir/src/application/calculator.cpp.o"
+},
+{
+  "directory": "/home/nikita/repos/calc_cli/build-package",
+  "command": "/usr/bin/c++ -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DSPDLOG_COMPILED_LIB -I/home/nikita/repos/calc_cli/include -I/usr/include/postgresql -I/home/nikita/repos/calc_cli/build-package/_deps/safe_math-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/nlohmann_json-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/include -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -o CMakeFiles/calc_cli.dir/src/application/logger.cpp.o -c /home/nikita/repos/calc_cli/src/application/logger.cpp",
+  "file": "/home/nikita/repos/calc_cli/src/application/logger.cpp",
+  "output": "CMakeFiles/calc_cli.dir/src/application/logger.cpp.o"
+},
+{
+  "directory": "/home/nikita/repos/calc_cli/build-package",
+  "command": "/usr/bin/c++ -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DSPDLOG_COMPILED_LIB -I/home/nikita/repos/calc_cli/include -I/usr/include/postgresql -I/home/nikita/repos/calc_cli/build-package/_deps/safe_math-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/nlohmann_json-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/include -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -o CMakeFiles/calc_cli.dir/src/application/parser.cpp.o -c /home/nikita/repos/calc_cli/src/application/parser.cpp",
+  "file": "/home/nikita/repos/calc_cli/src/application/parser.cpp",
+  "output": "CMakeFiles/calc_cli.dir/src/application/parser.cpp.o"
+},
+{
+  "directory": "/home/nikita/repos/calc_cli/build-package",
+  "command": "/usr/bin/c++ -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DSPDLOG_COMPILED_LIB -I/home/nikita/repos/calc_cli/include -I/usr/include/postgresql -I/home/nikita/repos/calc_cli/build-package/_deps/safe_math-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/nlohmann_json-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/include -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -o CMakeFiles/calc_cli.dir/src/application/printer.cpp.o -c /home/nikita/repos/calc_cli/src/application/printer.cpp",
+  "file": "/home/nikita/repos/calc_cli/src/application/printer.cpp",
+  "output": "CMakeFiles/calc_cli.dir/src/application/printer.cpp.o"
+},
+{
+  "directory": "/home/nikita/repos/calc_cli/build-package",
+  "command": "/usr/bin/c++ -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DSPDLOG_COMPILED_LIB -I/home/nikita/repos/calc_cli/include -I/usr/include/postgresql -I/home/nikita/repos/calc_cli/build-package/_deps/safe_math-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/nlohmann_json-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/include -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -o CMakeFiles/calc_cli.dir/src/application/runner.cpp.o -c /home/nikita/repos/calc_cli/src/application/runner.cpp",
+  "file": "/home/nikita/repos/calc_cli/src/application/runner.cpp",
+  "output": "CMakeFiles/calc_cli.dir/src/application/runner.cpp.o"
+},
+{
+  "directory": "/home/nikita/repos/calc_cli/build-package",
+  "command": "/usr/bin/c++ -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DSPDLOG_COMPILED_LIB -I/home/nikita/repos/calc_cli/include -I/usr/include/postgresql -I/home/nikita/repos/calc_cli/build-package/_deps/safe_math-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/nlohmann_json-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/include -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -o CMakeFiles/calc_cli.dir/src/cache_service/memory_cache.cpp.o -c /home/nikita/repos/calc_cli/src/cache_service/memory_cache.cpp",
+  "file": "/home/nikita/repos/calc_cli/src/cache_service/memory_cache.cpp",
+  "output": "CMakeFiles/calc_cli.dir/src/cache_service/memory_cache.cpp.o"
+},
+{
+  "directory": "/home/nikita/repos/calc_cli/build-package",
+  "command": "/usr/bin/c++ -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DSPDLOG_COMPILED_LIB -I/home/nikita/repos/calc_cli/include -I/usr/include/postgresql -I/home/nikita/repos/calc_cli/build-package/_deps/safe_math-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/nlohmann_json-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/include -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -o CMakeFiles/calc_cli.dir/src/cache_service/storage.cpp.o -c /home/nikita/repos/calc_cli/src/cache_service/storage.cpp",
+  "file": "/home/nikita/repos/calc_cli/src/cache_service/storage.cpp",
+  "output": "CMakeFiles/calc_cli.dir/src/cache_service/storage.cpp.o"
+},
+{
+  "directory": "/home/nikita/repos/calc_cli/build-package",
+  "command": "/usr/bin/c++ -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DSPDLOG_COMPILED_LIB -I/home/nikita/repos/calc_cli/include -I/usr/include/postgresql -I/home/nikita/repos/calc_cli/build-package/_deps/safe_math-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/nlohmann_json-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/include -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -o CMakeFiles/calc_cli.dir/src/network/tcp_client.cpp.o -c /home/nikita/repos/calc_cli/src/network/tcp_client.cpp",
+  "file": "/home/nikita/repos/calc_cli/src/network/tcp_client.cpp",
+  "output": "CMakeFiles/calc_cli.dir/src/network/tcp_client.cpp.o"
+},
+{
+  "directory": "/home/nikita/repos/calc_cli/build-package",
+  "command": "/usr/bin/c++ -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DSPDLOG_COMPILED_LIB -I/home/nikita/repos/calc_cli/include -I/usr/include/postgresql -I/home/nikita/repos/calc_cli/build-package/_deps/safe_math-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/nlohmann_json-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/include -isystem /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest/include -isystem /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -o CMakeFiles/calc_cli_tests.dir/tests/calc_cli_tests.cpp.o -c /home/nikita/repos/calc_cli/tests/calc_cli_tests.cpp",
+  "file": "/home/nikita/repos/calc_cli/tests/calc_cli_tests.cpp",
+  "output": "CMakeFiles/calc_cli_tests.dir/tests/calc_cli_tests.cpp.o"
+},
+{
+  "directory": "/home/nikita/repos/calc_cli/build-package",
+  "command": "/usr/bin/c++ -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DSPDLOG_COMPILED_LIB -I/home/nikita/repos/calc_cli/include -I/usr/include/postgresql -I/home/nikita/repos/calc_cli/build-package/_deps/safe_math-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/nlohmann_json-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/include -isystem /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest/include -isystem /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -o CMakeFiles/calc_cli_tests.dir/src/application/calculator.cpp.o -c /home/nikita/repos/calc_cli/src/application/calculator.cpp",
+  "file": "/home/nikita/repos/calc_cli/src/application/calculator.cpp",
+  "output": "CMakeFiles/calc_cli_tests.dir/src/application/calculator.cpp.o"
+},
+{
+  "directory": "/home/nikita/repos/calc_cli/build-package",
+  "command": "/usr/bin/c++ -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DSPDLOG_COMPILED_LIB -I/home/nikita/repos/calc_cli/include -I/usr/include/postgresql -I/home/nikita/repos/calc_cli/build-package/_deps/safe_math-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/nlohmann_json-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/include -isystem /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest/include -isystem /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -o CMakeFiles/calc_cli_tests.dir/src/application/logger.cpp.o -c /home/nikita/repos/calc_cli/src/application/logger.cpp",
+  "file": "/home/nikita/repos/calc_cli/src/application/logger.cpp",
+  "output": "CMakeFiles/calc_cli_tests.dir/src/application/logger.cpp.o"
+},
+{
+  "directory": "/home/nikita/repos/calc_cli/build-package",
+  "command": "/usr/bin/c++ -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DSPDLOG_COMPILED_LIB -I/home/nikita/repos/calc_cli/include -I/usr/include/postgresql -I/home/nikita/repos/calc_cli/build-package/_deps/safe_math-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/nlohmann_json-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/include -isystem /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest/include -isystem /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -o CMakeFiles/calc_cli_tests.dir/src/application/parser.cpp.o -c /home/nikita/repos/calc_cli/src/application/parser.cpp",
+  "file": "/home/nikita/repos/calc_cli/src/application/parser.cpp",
+  "output": "CMakeFiles/calc_cli_tests.dir/src/application/parser.cpp.o"
+},
+{
+  "directory": "/home/nikita/repos/calc_cli/build-package",
+  "command": "/usr/bin/c++ -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DSPDLOG_COMPILED_LIB -I/home/nikita/repos/calc_cli/include -I/usr/include/postgresql -I/home/nikita/repos/calc_cli/build-package/_deps/safe_math-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/nlohmann_json-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/include -isystem /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest/include -isystem /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -o CMakeFiles/calc_cli_tests.dir/src/application/printer.cpp.o -c /home/nikita/repos/calc_cli/src/application/printer.cpp",
+  "file": "/home/nikita/repos/calc_cli/src/application/printer.cpp",
+  "output": "CMakeFiles/calc_cli_tests.dir/src/application/printer.cpp.o"
+},
+{
+  "directory": "/home/nikita/repos/calc_cli/build-package",
+  "command": "/usr/bin/c++ -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DSPDLOG_COMPILED_LIB -I/home/nikita/repos/calc_cli/include -I/usr/include/postgresql -I/home/nikita/repos/calc_cli/build-package/_deps/safe_math-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/nlohmann_json-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/include -isystem /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest/include -isystem /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -o CMakeFiles/calc_cli_tests.dir/src/application/runner.cpp.o -c /home/nikita/repos/calc_cli/src/application/runner.cpp",
+  "file": "/home/nikita/repos/calc_cli/src/application/runner.cpp",
+  "output": "CMakeFiles/calc_cli_tests.dir/src/application/runner.cpp.o"
+},
+{
+  "directory": "/home/nikita/repos/calc_cli/build-package",
+  "command": "/usr/bin/c++ -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DSPDLOG_COMPILED_LIB -I/home/nikita/repos/calc_cli/include -I/usr/include/postgresql -I/home/nikita/repos/calc_cli/build-package/_deps/safe_math-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/nlohmann_json-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/include -isystem /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest/include -isystem /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -o CMakeFiles/calc_cli_tests.dir/src/cache_service/memory_cache.cpp.o -c /home/nikita/repos/calc_cli/src/cache_service/memory_cache.cpp",
+  "file": "/home/nikita/repos/calc_cli/src/cache_service/memory_cache.cpp",
+  "output": "CMakeFiles/calc_cli_tests.dir/src/cache_service/memory_cache.cpp.o"
+},
+{
+  "directory": "/home/nikita/repos/calc_cli/build-package",
+  "command": "/usr/bin/c++ -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DSPDLOG_COMPILED_LIB -I/home/nikita/repos/calc_cli/include -I/usr/include/postgresql -I/home/nikita/repos/calc_cli/build-package/_deps/safe_math-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/nlohmann_json-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/include -isystem /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest/include -isystem /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -o CMakeFiles/calc_cli_tests.dir/src/cache_service/storage.cpp.o -c /home/nikita/repos/calc_cli/src/cache_service/storage.cpp",
+  "file": "/home/nikita/repos/calc_cli/src/cache_service/storage.cpp",
+  "output": "CMakeFiles/calc_cli_tests.dir/src/cache_service/storage.cpp.o"
+},
+{
+  "directory": "/home/nikita/repos/calc_cli/build-package",
+  "command": "/usr/bin/c++ -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DSPDLOG_COMPILED_LIB -I/home/nikita/repos/calc_cli/include -I/usr/include/postgresql -I/home/nikita/repos/calc_cli/build-package/_deps/safe_math-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/nlohmann_json-src/include -I/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/include -isystem /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest/include -isystem /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -o CMakeFiles/calc_cli_tests.dir/src/network/tcp_client.cpp.o -c /home/nikita/repos/calc_cli/src/network/tcp_client.cpp",
+  "file": "/home/nikita/repos/calc_cli/src/network/tcp_client.cpp",
+  "output": "CMakeFiles/calc_cli_tests.dir/src/network/tcp_client.cpp.o"
+},
+{
+  "directory": "/home/nikita/repos/calc_cli/build-package/_deps/safe_math-build",
+  "command": "/usr/bin/c++  -I/home/nikita/repos/calc_cli/build-package/_deps/safe_math-src/include -isystem /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest/include -isystem /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest -O3 -DNDEBUG -std=c++20 -o CMakeFiles/SafeMathTests.dir/tests/SafeMath_tests.cpp.o -c /home/nikita/repos/calc_cli/build-package/_deps/safe_math-src/tests/SafeMath_tests.cpp",
+  "file": "/home/nikita/repos/calc_cli/build-package/_deps/safe_math-src/tests/SafeMath_tests.cpp",
+  "output": "_deps/safe_math-build/CMakeFiles/SafeMathTests.dir/tests/SafeMath_tests.cpp.o"
+},
+{
+  "directory": "/home/nikita/repos/calc_cli/build-package/_deps/googletest-build/googlemock",
+  "command": "/usr/bin/c++  -I/home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googlemock/include -I/home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googlemock -isystem /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest/include -isystem /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest -O3 -DNDEBUG -std=c++20 -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o CMakeFiles/gmock.dir/src/gmock-all.cc.o -c /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googlemock/src/gmock-all.cc",
+  "file": "/home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googlemock/src/gmock-all.cc",
+  "output": "_deps/googletest-build/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o"
+},
+{
+  "directory": "/home/nikita/repos/calc_cli/build-package/_deps/googletest-build/googlemock",
+  "command": "/usr/bin/c++  -isystem /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googlemock/include -isystem /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googlemock -isystem /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest/include -isystem /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest -O3 -DNDEBUG -std=c++20 -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o CMakeFiles/gmock_main.dir/src/gmock_main.cc.o -c /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googlemock/src/gmock_main.cc",
+  "file": "/home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googlemock/src/gmock_main.cc",
+  "output": "_deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.o"
+},
+{
+  "directory": "/home/nikita/repos/calc_cli/build-package/_deps/googletest-build/googletest",
+  "command": "/usr/bin/c++  -I/home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest/include -I/home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest -O3 -DNDEBUG -std=c++20 -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o CMakeFiles/gtest.dir/src/gtest-all.cc.o -c /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest/src/gtest-all.cc",
+  "file": "/home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest/src/gtest-all.cc",
+  "output": "_deps/googletest-build/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.o"
+},
+{
+  "directory": "/home/nikita/repos/calc_cli/build-package/_deps/googletest-build/googletest",
+  "command": "/usr/bin/c++  -isystem /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest/include -isystem /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest -O3 -DNDEBUG -std=c++20 -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o CMakeFiles/gtest_main.dir/src/gtest_main.cc.o -c /home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest/src/gtest_main.cc",
+  "file": "/home/nikita/repos/calc_cli/build-package/_deps/googletest-src/googletest/src/gtest_main.cc",
+  "output": "_deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o"
+},
+{
+  "directory": "/home/nikita/repos/calc_cli/build-package/_deps/spdlog-build",
+  "command": "/usr/bin/c++ -DSPDLOG_COMPILED_LIB -DSPDLOG_FWRITE_UNLOCKED -I/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/include -O3 -DNDEBUG -std=c++20 -o CMakeFiles/spdlog.dir/src/spdlog.cpp.o -c /home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/src/spdlog.cpp",
+  "file": "/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/src/spdlog.cpp",
+  "output": "_deps/spdlog-build/CMakeFiles/spdlog.dir/src/spdlog.cpp.o"
+},
+{
+  "directory": "/home/nikita/repos/calc_cli/build-package/_deps/spdlog-build",
+  "command": "/usr/bin/c++ -DSPDLOG_COMPILED_LIB -DSPDLOG_FWRITE_UNLOCKED -I/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/include -O3 -DNDEBUG -std=c++20 -o CMakeFiles/spdlog.dir/src/stdout_sinks.cpp.o -c /home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/src/stdout_sinks.cpp",
+  "file": "/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/src/stdout_sinks.cpp",
+  "output": "_deps/spdlog-build/CMakeFiles/spdlog.dir/src/stdout_sinks.cpp.o"
+},
+{
+  "directory": "/home/nikita/repos/calc_cli/build-package/_deps/spdlog-build",
+  "command": "/usr/bin/c++ -DSPDLOG_COMPILED_LIB -DSPDLOG_FWRITE_UNLOCKED -I/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/include -O3 -DNDEBUG -std=c++20 -o CMakeFiles/spdlog.dir/src/color_sinks.cpp.o -c /home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/src/color_sinks.cpp",
+  "file": "/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/src/color_sinks.cpp",
+  "output": "_deps/spdlog-build/CMakeFiles/spdlog.dir/src/color_sinks.cpp.o"
+},
+{
+  "directory": "/home/nikita/repos/calc_cli/build-package/_deps/spdlog-build",
+  "command": "/usr/bin/c++ -DSPDLOG_COMPILED_LIB -DSPDLOG_FWRITE_UNLOCKED -I/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/include -O3 -DNDEBUG -std=c++20 -o CMakeFiles/spdlog.dir/src/file_sinks.cpp.o -c /home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/src/file_sinks.cpp",
+  "file": "/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/src/file_sinks.cpp",
+  "output": "_deps/spdlog-build/CMakeFiles/spdlog.dir/src/file_sinks.cpp.o"
+},
+{
+  "directory": "/home/nikita/repos/calc_cli/build-package/_deps/spdlog-build",
+  "command": "/usr/bin/c++ -DSPDLOG_COMPILED_LIB -DSPDLOG_FWRITE_UNLOCKED -I/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/include -O3 -DNDEBUG -std=c++20 -o CMakeFiles/spdlog.dir/src/async.cpp.o -c /home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/src/async.cpp",
+  "file": "/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/src/async.cpp",
+  "output": "_deps/spdlog-build/CMakeFiles/spdlog.dir/src/async.cpp.o"
+},
+{
+  "directory": "/home/nikita/repos/calc_cli/build-package/_deps/spdlog-build",
+  "command": "/usr/bin/c++ -DSPDLOG_COMPILED_LIB -DSPDLOG_FWRITE_UNLOCKED -I/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/include -O3 -DNDEBUG -std=c++20 -o CMakeFiles/spdlog.dir/src/cfg.cpp.o -c /home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/src/cfg.cpp",
+  "file": "/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/src/cfg.cpp",
+  "output": "_deps/spdlog-build/CMakeFiles/spdlog.dir/src/cfg.cpp.o"
+},
+{
+  "directory": "/home/nikita/repos/calc_cli/build-package/_deps/spdlog-build",
+  "command": "/usr/bin/c++ -DSPDLOG_COMPILED_LIB -DSPDLOG_FWRITE_UNLOCKED -I/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/include -O3 -DNDEBUG -std=c++20 -o CMakeFiles/spdlog.dir/src/bundled_fmtlib_format.cpp.o -c /home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/src/bundled_fmtlib_format.cpp",
+  "file": "/home/nikita/repos/calc_cli/build-package/_deps/spdlog-src/src/bundled_fmtlib_format.cpp",
+  "output": "_deps/spdlog-build/CMakeFiles/spdlog.dir/src/bundled_fmtlib_format.cpp.o"
+}
+]

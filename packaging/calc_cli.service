@@ -1,0 +1,25 @@
+[Unit]
+Description=Calc CLI TCP Server
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+DynamicUser=yes
+
+EnvironmentFile=-/etc/calc_cli/calc_cli.conf
+
+ExecStart=/usr/bin/calc_cli --server --port ${CALC_CLI_PORT}
+
+KillSignal=SIGTERM
+TimeoutStopSec=10
+
+Restart=on-failure
+RestartSec=2
+
+StandardInput=null
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

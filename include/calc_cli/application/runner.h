@@ -34,6 +34,7 @@ public:
     Runner& operator=(const Runner&&) noexcept = delete;
 
     void run();
+    void stop();
 
 private:
     void signal_thread();

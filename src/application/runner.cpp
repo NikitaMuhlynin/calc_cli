@@ -59,6 +59,10 @@ void Runner::run() {
     }
 }
 
+void Runner::stop() {
+    request_stop();
+}
+
 void Runner::request_stop() {
     const bool wasRunning = running_.exchange(false);
 
@@ -223,8 +227,6 @@ void Runner::handle_client(
                 std::string request;
                 std::getline(inputStream, request);
 
-                Logger::instance().info("Recieved request: {}", request);
-
                 try {
                     response = process_request(request);
                 } catch (const std::exception& e) {
@@ -295,6 +297,5 @@ std::string Runner::process_request(const std::string& request) {
 
     return printer_.printResult(context.result);
 }
-
 
 }

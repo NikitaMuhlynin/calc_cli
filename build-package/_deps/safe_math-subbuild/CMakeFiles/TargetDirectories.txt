@@ -1,0 +1,3 @@
+/home/nikita/repos/calc_cli/build-package/_deps/safe_math-subbuild/CMakeFiles/safe_math-populate.dir
+/home/nikita/repos/calc_cli/build-package/_deps/safe_math-subbuild/CMakeFiles/edit_cache.dir
+/home/nikita/repos/calc_cli/build-package/_deps/safe_math-subbuild/CMakeFiles/rebuild_cache.dir

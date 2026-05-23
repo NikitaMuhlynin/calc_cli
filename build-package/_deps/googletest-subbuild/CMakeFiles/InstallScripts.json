@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/nikita/repos/calc_cli/build-package/_deps/googletest-subbuild/cmake_install.cmake"
+	],
+	"Parallel" : false
+}
