@@ -25,7 +25,7 @@ public:
     MemoryCache(MemoryCache&& other) noexcept = default;
     MemoryCache& operator=(MemoryCache&& other) noexcept = default;
 
-    void load(std::unordered_map<std::string, ApplicationContext>& cache);
+    void load(std::unordered_map<std::string, ApplicationContext> cache);
     void save(const std::string& key, const ApplicationContext& context);
     std::optional<ApplicationContext> find(const std::string& key) const;
 

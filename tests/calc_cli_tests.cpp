@@ -1,245 +1,302 @@
-#include <gtest/gtest.h>
-
-#include <stdexcept>
-#include <functional>
-#include <string>
-#include <iosfwd>
-
 #include "calc_cli/application/runner.h"
 
-struct RunResult {
-    int code;
-    std::string out;
-    std::string err;
+#include <gtest/gtest.h>
+
+#include <boost/asio.hpp>
+
+#include <chrono>
+#include <cstdint>
+#include <istream>
+#include <memory>
+#include <stdexcept>
+#include <string>
+#include <thread>
+#include <utility>
+
+namespace {
+
+class TestTcpClient {
+public:
+    TestTcpClient(std::string host, std::string port) 
+        : host_{std::move(host)},
+          port_{std::move(port)} {}
+    
+    std::string send(const std::string& request) const {
+        boost::asio::io_context ioContext;
+
+        boost::asio::ip::tcp::resolver resolver(ioContext);
+        const auto endpoints = resolver.resolve(host_, port_);
+
+        boost::asio::ip::tcp::socket socket(ioContext);
+        boost::asio::connect(socket, endpoints);
+
+        const std::string requestWithDelimiter = request + '\n';
+
+        boost::asio::write(
+            socket,
+            boost::asio::buffer(requestWithDelimiter)
+        );
+
+        boost::asio::streambuf responseBuffer;
+
+        boost::asio::read_until(
+            socket,
+            responseBuffer,
+            '\n'
+        );
+
+        std::istream responseStream(&responseBuffer);
+
+        std::string response;
+        std::getline(responseStream, response);
+
+        return response;
+    }
+
+private:
+    std::string host_;
+    std::string port_;
+
 };
 
-RunResult runCli(int argc, char** argv) {
-    std::ostringstream out;
-    std::ostringstream err;
-    const std::string connectionString =
-            "host=localhost "
-            "port=5432 "
-            "dbname=calcli_cache "
-            "user=calcli_user "
-            "password=calcli";
+void waitUntilServerReady(
+    const std::string& host,
+    const std::string& port,
+    std::chrono::milliseconds timeout
+) {
+    const auto deadline = std::chrono::steady_clock::now() + timeout;
 
-    calc_cli::Runner runner(out, err, connectionString);
-    int code = runner.run(argc, argv);
+    while (std::chrono::steady_clock::now() < deadline) {
+        boost::asio::io_context ioContext;
+        boost::asio::ip::tcp::resolver resolver(ioContext);
 
-    return RunResult{code, out.str(), err.str()};
+        boost::system::error_code resolveError;
+        const auto endpoints = resolver.resolve(host, port, resolveError);
+
+        if (resolveError) {
+            std::this_thread::yield();
+            continue;
+        }
+
+        boost::asio::ip::tcp::socket socket(ioContext);
+
+        boost::system::error_code connectError;
+        boost::asio::connect(socket, endpoints, connectError);
+
+        if (!connectError) {
+            return;
+        }
+
+        std::this_thread::yield();
+    }
+
+    throw std::runtime_error("Server did not become ready before timeout");
 }
 
-// Regular calls
+class CalcCliNetworkTest : public ::testing::Test {
+protected:
+    void SetUp() override {
+        runner_ = std::make_shared<calc_cli::Runner>(
+            connectionString_,
+            port_
+        );
 
-TEST(CalcCliTest, HelpRequested) {
-    char programName[] = "calc_cli";
-    char helpArg[] = "{\"help\": true}";
-    char* argv[] = { programName, helpArg };
+        serverThread_ = std::thread([runner = runner_]() {
+            runner->run();
+        });
 
-    RunResult output = runCli(2, argv);
+        waitUntilServerReady(
+            host_,
+            std::to_string(port_),
+            std::chrono::milliseconds(3000)
+        );
+    }
 
-    std::string expected =
-        "Usage:\n"
-        "  calc_cli '<json>'\n"
-        "  calc_cli '{\"help\": true}'\n\n"
-        "Description:\n"
-        "  calc_cli performs safe integer arithmetic using JSON input.\n\n"
-        "Supported operations:\n"
-        "  add, subtract, multiply, divide, power, factorial\n\n"
-        "JSON format:\n"
-        "  Binary operations:\n"
-        "    {\"left\": <int>, \"right\": <int>, \"operation\": \"add\"}\n"
-        "  Factorial:\n"
-        "    {\"left\": <int>, \"operation\": \"factorial\"}\n"
-        "  Help:\n"
-        "    {\"help\": true}\n\n"
-        "Examples:\n"
-        "  calc_cli '{\"left\": 10, \"right\": 20, \"operation\": \"add\"}'\n"
-        "  calc_cli '{\"left\": 6, \"operation\": \"factorial\"}'\n"
-        "  calc_cli '{\"help\": true}'\n";
+    void TearDown() override {
+        if (runner_ != nullptr) {
+            runner_->stop();
+        }
 
-    EXPECT_EQ(output.out, expected);
-}
+        if (serverThread_.joinable()) {
+            serverThread_.join();
+        }
+    }
 
-TEST(CalcCliTest, NormalAdd) {
-    char programName[] = "calc_cli";
-    char AddArg[] = "{\"left\": 1, \"right\": 2, \"operation\": \"add\"}";
-    char* argv[] = { programName, AddArg };
+protected:
+    const std::string host_ = "127.0.0.1";
+    const std::uint16_t port_ = 5556;
 
-    RunResult output = runCli(2, argv);
+    const std::string connectionString_ =
+        "host=localhost "
+        "port=5432 "
+        "dbname=calcli_cache "
+        "user=calcli_user "
+        "password=calcli";
 
-    std::string expected = "Result: 3\n";
+    std::shared_ptr<calc_cli::Runner> runner_;
+    std::thread serverThread_;
 
-    EXPECT_EQ(output.out, expected);
-}
+};
 
-TEST(CalcCliTest, NormalSub) {
-    char programName[] = "calc_cli";
-    char SubArg[] = "{\"left\": 3, \"right\": 2, \"operation\": \"subtract\"}";
-    char* argv[] = { programName, SubArg };
+TEST_F(CalcCliNetworkTest, HelpRequested) {
+    const TestTcpClient client(host_, std::to_string(port_));
 
-    RunResult output = runCli(2, argv);
-
-    std::string expected = "Result: 1\n";
-
-    EXPECT_EQ(output.out, expected);
-}
-
-TEST(CalcCliTest, NormalMul) {
-    char programName[] = "calc_cli";
-    char MulArg[] = "{\"left\": 3, \"right\": 2, \"operation\": \"multiply\"}";
-    char* argv[] = { programName, MulArg };
-
-    RunResult output = runCli(2, argv);
-
-    std::string expected = "Result: 6\n";
-
-    EXPECT_EQ(output.out, expected);
-}
-
-TEST(CalcCliTest, NormalDiv) {
-    char programName[] = "calc_cli";
-    char DivArg[] = "{\"left\": 8, \"right\": 2, \"operation\": \"divide\"}";
-    char* argv[] = { programName, DivArg };
-
-    RunResult output = runCli(2, argv);
-
-    std::string expected = "Result: 4\n";
-
-    EXPECT_EQ(output.out, expected);
-}
-
-TEST(CalcCliTest, NormalPow) {
-    char programName[] = "calc_cli";
-    char PowArg[] = "{\"left\": 8, \"right\": 2, \"operation\": \"power\"}";
-    char* argv[] = { programName, PowArg };
-
-    RunResult output = runCli(2, argv);
-
-    std::string expected = "Result: 64\n";
-
-    EXPECT_EQ(output.out, expected);
-}
-
-TEST(CalcCliTest, NormalFact) {
-    char programName[] = "calc_cli";
-    char FactArg[] = "{\"left\": 6, \"operation\": \"factorial\"}";
-    char* argv[] = { programName, FactArg };
-
-    RunResult output = runCli(2, argv);
-
-    std::string expected = "Result: 720\n";
-
-    EXPECT_EQ(output.out, expected);
-}
-
-// Invalid calls
-
-TEST(CalcCliTest, InvalidJSON) {
-    char programName[] = "calc_cli";
-    char badJson[] = "{\"help\"}";
-    char* argv[] = { programName, badJson };
-
-    RunResult output = runCli(2, argv);
+    const std::string response = client.send(
+        R"({"help": true})"
+    );
     
-    EXPECT_EQ(output.code, 1);
-    EXPECT_NE(output.err.find("Error: invalid JSON input"), std::string::npos);
+    EXPECT_EQ(response, "Usage:");
 }
 
-TEST(CalcCliTest, EmptyCall) {
-    char programName[] = "calc_cli";
-    char* argv[] = { programName };
+TEST_F(CalcCliNetworkTest, NormalAdd) {
+    const TestTcpClient client(host_, std::to_string(port_));
 
-    RunResult output = runCli(1, argv);
-    
-    EXPECT_EQ(output.code, 1);
-    EXPECT_NE(output.err.find("Error: JSON input is missing"), std::string::npos);
+    const std::string response = client.send(
+        R"({"left":1,"right":2,"operation":"add"})"
+    );
+
+    EXPECT_EQ(response, "Result: 3");
 }
 
-TEST(CalcCliTest, InvalidOperation) {
-    char programName[] = "calc_cli";
-    char badJson[] = "{\"left\": 16, \"right\": 2, \"operation\": \"squareroot\"}";
-    char* argv[] = { programName, badJson };
+TEST_F(CalcCliNetworkTest, NormalSub) {
+    const TestTcpClient client(host_, std::to_string(port_));
 
-    RunResult output = runCli(2, argv);
-    
-    EXPECT_EQ(output.code, 1);
-    EXPECT_NE(output.err.find("Error: unknown operation"), std::string::npos);
+    const std::string response = client.send(
+        R"({"left":3,"right":2,"operation":"subtract"})"
+    );
+
+    EXPECT_EQ(response, "Result: 1");
 }
 
-TEST(CalcCliTest, LeftIsMissing) {
-    char programName[] = "calc_cli";
-    char missedLeftJson[] = "{\"right\": 16, \"operation\": \"add\"}";
-    char* argv[] = { programName, missedLeftJson };
+TEST_F(CalcCliNetworkTest, NormalMul) {
+    const TestTcpClient client(host_, std::to_string(port_));
 
-    RunResult output = runCli(2, argv);
-    
-    EXPECT_EQ(output.code, 1);
-    EXPECT_NE(output.err.find("Error: field 'left' is required"), std::string::npos);
+    const std::string response = client.send(
+        R"({"left":3,"right":2,"operation":"multiply"})"
+    );
+
+    EXPECT_EQ(response, "Result: 6");
 }
 
-TEST(CalcCliTest, RightIsMissing) {
-    char programName[] = "calc_cli";
-    char missedRightJson[] = "{\"left\": 16, \"operation\": \"add\"}";
-    char* argv[] = { programName, missedRightJson };
+TEST_F(CalcCliNetworkTest, NormalDiv) {
+    const TestTcpClient client(host_, std::to_string(port_));
 
-    RunResult output = runCli(2, argv);
+    const std::string response = client.send(
+        R"({"left":8,"right":2,"operation":"divide"})"
+    );
 
-    EXPECT_EQ(output.code, 1);
-    EXPECT_NE(output.err.find("Error: field 'right' is required"), std::string::npos);
+    EXPECT_EQ(response, "Result: 4");
 }
 
-TEST(CalcCliTest, OperationIsMissing) {
-    char programName[] = "calc_cli";
-    char missedOperationJson[] = "{\"left\": 16, \"right\": \"2\"}";
-    char* argv[] = { programName, missedOperationJson };
+TEST_F(CalcCliNetworkTest, NormalPow) {
+    const TestTcpClient client(host_, std::to_string(port_));
 
-    RunResult output = runCli(2, argv);
-    
-    EXPECT_EQ(output.code, 1);
-    EXPECT_NE(output.err.find("Error: field 'operation' is required"), std::string::npos);
+    const std::string response = client.send(
+        R"({"left":8,"right":2,"operation":"power"})"
+    );
+
+    EXPECT_EQ(response, "Result: 64");
 }
 
-TEST(CalcCliTest, DivisionByZero) {
-    char programName[] = "calc_cli";
-    char divZeroJson[] = "{\"left\": 16, \"right\": 0, \"operation\": \"divide\"}";
-    char* argv[] = { programName, divZeroJson };
+TEST_F(CalcCliNetworkTest, NormalFact) {
+    const TestTcpClient client(host_, std::to_string(port_));
 
-    RunResult output = runCli(2, argv);
-    
-    EXPECT_EQ(output.code, 1);
-    EXPECT_NE(output.err.find("Error: division by zero"), std::string::npos);
+    const std::string response = client.send(
+        R"({"left":6,"operation":"factorial"})"
+    );
+
+    EXPECT_EQ(response, "Result: 720");
 }
 
-TEST(CalcCliTest, Overflow) {
-    char programName[] = "calc_cli";
-    char overflowJson[] = "{\"left\": 21, \"operation\": \"factorial\"}";
-    char* argv[] = { programName, overflowJson };
+TEST_F(CalcCliNetworkTest, InvalidJSON) {
+    const TestTcpClient client(host_, std::to_string(port_));
 
-    RunResult output = runCli(2, argv);
-    
-    EXPECT_EQ(output.code, 1);
-    EXPECT_NE(output.err.find("Error: multiplication overflow"), std::string::npos);
+    const std::string response = client.send(
+        R"({"help"})"
+    );
+
+    EXPECT_NE(response.find("Error: invalid JSON input"), std::string::npos);
 }
 
-TEST(CalcCliTest, NegativePow) {
-    char programName[] = "calc_cli";
-    char negativePowJson[] = "{\"left\": 2, \"right\": -2, \"operation\": \"power\"}";
-    char* argv[] = { programName, negativePowJson };
+TEST_F(CalcCliNetworkTest, InvalidOperation) {
+    const TestTcpClient client(host_, std::to_string(port_));
 
-    RunResult output = runCli(2, argv);
-    
-    EXPECT_EQ(output.code, 1);
-    EXPECT_NE(output.err.find("Error: negative exponent"), std::string::npos);
+    const std::string response = client.send(
+        R"({"left":16,"right":2,"operation":"squareroot"})"
+    );
+
+    EXPECT_NE(response.find("Error: unknown operation"), std::string::npos);
 }
 
-TEST(CalcCliTest, NegativeFactorial) {
-    char programName[] = "calc_cli";
-    char negativeFactJson[] = "{\"left\": -5, \"operation\": \"factorial\"}";
-    char* argv[] = { programName, negativeFactJson };
+TEST_F(CalcCliNetworkTest, LeftIsMissing) {
+    const TestTcpClient client(host_, std::to_string(port_));
 
-    RunResult output = runCli(2, argv);
-    
-    EXPECT_EQ(output.code, 1);
-    EXPECT_NE(output.err.find("Error: negative factorial argument"), std::string::npos);
+    const std::string response = client.send(
+        R"({"right":16,"operation":"add"})"
+    );
+
+    EXPECT_NE(response.find("Error: field 'left' is required"), std::string::npos);
+}
+
+TEST_F(CalcCliNetworkTest, RightIsMissing) {
+    const TestTcpClient client(host_, std::to_string(port_));
+
+    const std::string response = client.send(
+        R"({"left":16,"operation":"add"})"
+    );
+
+    EXPECT_NE(response.find("Error: field 'right' is required"), std::string::npos);
+}
+
+TEST_F(CalcCliNetworkTest, OperationIsMissing) {
+    const TestTcpClient client(host_, std::to_string(port_));
+
+    const std::string response = client.send(
+        R"({"left":16,"right":2})"
+    );
+
+    EXPECT_NE(response.find("Error: field 'operation' is required"), std::string::npos);
+}
+
+TEST_F(CalcCliNetworkTest, DivisionByZero) {
+    const TestTcpClient client(host_, std::to_string(port_));
+
+    const std::string response = client.send(
+        R"({"left":16,"right":0,"operation":"divide"})"
+    );
+
+    EXPECT_NE(response.find("Error: division by zero"), std::string::npos);
+}
+
+TEST_F(CalcCliNetworkTest, Overflow) {
+    const TestTcpClient client(host_, std::to_string(port_));
+
+    const std::string response = client.send(
+        R"({"left":21,"operation":"factorial"})"
+    );
+
+    EXPECT_NE(response.find("Error: multiplication overflow"), std::string::npos);
+}
+
+TEST_F(CalcCliNetworkTest, NegativePow) {
+    const TestTcpClient client(host_, std::to_string(port_));
+
+    const std::string response = client.send(
+        R"({"left":2,"right":-2,"operation":"power"})"
+    );
+
+    EXPECT_NE(response.find("Error: negative exponent"), std::string::npos);
+}
+
+TEST_F(CalcCliNetworkTest, NegativeFactorial) {
+    const TestTcpClient client(host_, std::to_string(port_));
+
+    const std::string response = client.send(
+        R"({"left":-5,"operation":"factorial"})"
+    );
+
+    EXPECT_NE(response.find("Error: negative factorial argument"), std::string::npos);
+}
+
+
 }

@@ -1,6 +1,12 @@
 #pragma once
 
-#include <ostream>
+#include <atomic>
+#include <thread>
+#include <cstdint>
+#include <string>
+#include <memory>
+
+#include <boost/asio.hpp>
 
 #include "calc_cli/application/calculator.h"
 #include "calc_cli/application/parser.h"
@@ -14,25 +20,53 @@ namespace calc_cli {
 
 class Runner {
 public:
-    Runner(std::ostream& out, std::ostream& err, const std::string& connectionString);
-    ~Runner() = default;
+    Runner(
+        const std::string& connectionString,
+        std::uint16_t port
+    );
 
-    Runner(const Runner&) = default;
-    Runner& operator=(const Runner&) = default;
+    ~Runner();
+
+    Runner(const Runner&) = delete;
+    Runner& operator=(const Runner&) = delete;
     
-    Runner(Runner&&) noexcept = default;
-    Runner& operator=(const Runner&&) noexcept = default;
+    Runner(Runner&&) noexcept = delete;
+    Runner& operator=(const Runner&&) noexcept = delete;
 
-    int run(int argc, char** argv);
+    void run();
+    void stop();
 
 private:
+    void signal_thread();
+    void server_thread();
+
+    void start_accept();
+
+    void handle_client(
+        std::shared_ptr<boost::asio::ip::tcp::socket> socket
+    );
+
+    std::string process_request(const std::string& request);
+
+    void request_stop();
+    void join_threads();
+
+private:
+    std::atomic<bool> running_;
+
+    boost::asio::io_context io_context_;
+    boost::asio::ip::tcp::acceptor acceptor_;
+    std::uint16_t port_;
+
+    std::thread server_thread_;
+    std::thread signal_thread_;
+
     CommandLineParser parser_;
     Calculator calculator_;
     Printer printer_;
+
     Storage storage_;
     MemoryCache cache_;
-    std::ostream& out_;
-    std::ostream& err_;
 };
 
 }

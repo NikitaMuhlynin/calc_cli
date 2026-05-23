@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(calc_cli VERSION 2.0.0 LANGUAGES CXX)
+project(calc_cli VERSION 3.0.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -41,6 +41,8 @@ FetchContent_MakeAvailable(
 )
 
 find_package(PostgreSQL REQUIRED)
+find_package(Boost REQUIRED COMPONENTS system)
+find_package(Threads REQUIRED)
 
 # -------------------- source lists --------------------
 
@@ -57,9 +59,14 @@ set(CACHE_SERVICE_SOURCES
     src/cache_service/storage.cpp
 )
 
+set(NETWORK_SOURCES
+    src/network/tcp_client.cpp
+)
+
 set(PROJECT_LIBRARY_SOURCES
     ${APP_SOURCES}
     ${CACHE_SERVICE_SOURCES}
+    ${NETWORK_SOURCES}
 )
 
 # -------------------- main executable --------------------
@@ -73,6 +80,7 @@ add_executable(
 target_include_directories(calc_cli PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/include"
     ${PostgreSQL_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
 )
 
 target_link_libraries(
@@ -82,11 +90,23 @@ target_link_libraries(
         nlohmann_json::nlohmann_json
         spdlog::spdlog
         ${PostgreSQL_LIBRARIES}
+        Boost::system
+        Threads::Threads
 )
 
 target_compile_options(calc_cli PRIVATE -Wall -Wextra -Wpedantic)
 
-install(TARGETS calc_cli RUNTIME DESTINATION bin)
+install(TARGETS calc_cli RUNTIME DESTINATION usr/bin)
+
+install(
+    FILES packaging/calc_cli.service
+    DESTINATION lib/systemd/system
+)
+
+install(
+    FILES packaging/calc_cli.conf
+    DESTINATION etc/calc_cli
+)
 
 # -------------------- tests --------------------
 
@@ -107,6 +127,7 @@ add_executable(
 target_include_directories(calc_cli_tests PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/include"
     ${PostgreSQL_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
 )
 
 target_link_libraries(
@@ -116,11 +137,13 @@ target_link_libraries(
         nlohmann_json::nlohmann_json
         spdlog::spdlog
         ${PostgreSQL_LIBRARIES}
+        Boost::system
+        Threads::Threads
         gtest
         gtest_main
 )
 
-target_compile_options(calc_cli_tests PRIVATE -Wall -Wextra -Wpedantic) 
+target_compile_options(calc_cli_tests PRIVATE -Wall -Wextra -Wpedantic)
 
 add_test(NAME calc_cli_tests COMMAND calc_cli_tests)
 
@@ -152,10 +175,17 @@ endif()
 # -------------------- source collection --------------------
 
 file(
-    GLOB_RECURSE PROJECT_SOURCES
+    GLOB_RECURSE PROJECT_FORMAT_SOURCES
     CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp"
+)
+
+file(
+    GLOB_RECURSE PROJECT_TIDY_SOURCES
+    CONFIGURE_DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
 )
 
 # -------------------- formatting --------------------
@@ -163,11 +193,14 @@ file(
 find_program(CLANG_FORMAT_EXE clang-format)
 
 if(CLANG_FORMAT_EXE)
-    add_custom_target(format COMMAND "${CLANG_FORMAT_EXE}" -i ${PROJECT_SOURCES})
+    add_custom_target(
+        format
+        COMMAND "${CLANG_FORMAT_EXE}" -i ${PROJECT_FORMAT_SOURCES}
+    )
 
     add_custom_target(
         format-check
-        COMMAND "${CLANG_FORMAT_EXE}" --dry-run --Werror ${PROJECT_SOURCES}
+        COMMAND "${CLANG_FORMAT_EXE}" --dry-run --Werror ${PROJECT_FORMAT_SOURCES}
     )
 endif()
 
@@ -176,21 +209,37 @@ endif()
 find_program(CLANG_TIDY_EXE clang-tidy)
 
 if(CLANG_TIDY_EXE)
-    set_target_properties(calc_cli PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
-    set_target_properties(calc_cli_tests PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
 
     add_custom_target(
         tidy
         COMMAND
             "${CLANG_TIDY_EXE}"
-            ${PROJECT_SOURCES}
-            --
-            -I"${CMAKE_CURRENT_SOURCE_DIR}/include"
-            -I"${safe_math_SOURCE_DIR}/include"
-            -I"${nlohmann_json_SOURCE_DIR}/include"
-            -I"${spdlog_SOURCE_DIR}/include"
-            -I"${PostgreSQL_INCLUDE_DIRS}"
-            -std=c++20
+            ${PROJECT_TIDY_SOURCES}
+            -p "${CMAKE_BINARY_DIR}"
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     )
 endif()
+
+# -------------------- packaging --------------------
+
+set(CPACK_GENERATOR "DEB")
+
+set(CPACK_PACKAGE_NAME "calc-cli")
+set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+set(CPACK_PACKAGE_CONTACT "Nikita")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Nikita")
+set(CPACK_DEBIAN_PACKAGE_SECTION "utils")
+set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
+
+set(CPACK_PACKAGING_INSTALL_PREFIX "/")
+set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
+
+set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+
+set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA
+    "${CMAKE_CURRENT_SOURCE_DIR}/packaging/debian/postinst"
+    "${CMAKE_CURRENT_SOURCE_DIR}/packaging/debian/prerm"
+    "${CMAKE_CURRENT_SOURCE_DIR}/packaging/debian/postrm"
+)
+
+include(CPack)

@@ -1,0 +1,14 @@
+# Target labels
+ spdlog-populate
+# Source files and their labels
+/home/nikita/repos/calc_cli/build-package/_deps/spdlog-subbuild/CMakeFiles/spdlog-populate
+/home/nikita/repos/calc_cli/build-package/_deps/spdlog-subbuild/CMakeFiles/spdlog-populate.rule
+/home/nikita/repos/calc_cli/build-package/_deps/spdlog-subbuild/CMakeFiles/spdlog-populate-complete.rule
+/home/nikita/repos/calc_cli/build-package/_deps/spdlog-subbuild/spdlog-populate-prefix/src/spdlog-populate-stamp/spdlog-populate-build.rule
+/home/nikita/repos/calc_cli/build-package/_deps/spdlog-subbuild/spdlog-populate-prefix/src/spdlog-populate-stamp/spdlog-populate-configure.rule
+/home/nikita/repos/calc_cli/build-package/_deps/spdlog-subbuild/spdlog-populate-prefix/src/spdlog-populate-stamp/spdlog-populate-download.rule
+/home/nikita/repos/calc_cli/build-package/_deps/spdlog-subbuild/spdlog-populate-prefix/src/spdlog-populate-stamp/spdlog-populate-install.rule
+/home/nikita/repos/calc_cli/build-package/_deps/spdlog-subbuild/spdlog-populate-prefix/src/spdlog-populate-stamp/spdlog-populate-mkdir.rule
+/home/nikita/repos/calc_cli/build-package/_deps/spdlog-subbuild/spdlog-populate-prefix/src/spdlog-populate-stamp/spdlog-populate-patch.rule
+/home/nikita/repos/calc_cli/build-package/_deps/spdlog-subbuild/spdlog-populate-prefix/src/spdlog-populate-stamp/spdlog-populate-test.rule
+/home/nikita/repos/calc_cli/build-package/_deps/spdlog-subbuild/spdlog-populate-prefix/src/spdlog-populate-stamp/spdlog-populate-update.rule

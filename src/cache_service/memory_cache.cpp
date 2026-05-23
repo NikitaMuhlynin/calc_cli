@@ -8,7 +8,7 @@ MemoryCache::MemoryCache(
     ) : cache_(std::move(records)) {}
 
 void MemoryCache::load(
-    std::unordered_map<std::string, ApplicationContext>& cache
+    std::unordered_map<std::string, ApplicationContext> cache
 ) {
     cache_ = std::move(cache);
 }
